@@ -37,6 +37,7 @@ import com.example.konstanz.ui.components.KtButton
 import com.example.konstanz.ui.components.LineBadge
 import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.SectionLabel
+import com.example.konstanz.ui.components.dragSheetBody
 import com.example.konstanz.ui.components.dragSheetContainer
 import com.example.konstanz.ui.components.dragSheetHandle
 import com.example.konstanz.ui.components.dragSheetPeek
@@ -108,6 +109,7 @@ fun LocationSheet(
                 )
             }
         }
+        Column(Modifier.dragSheetBody(dragState)) {
         Row(Modifier.padding(top = 18.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             KtButton(stringResource(R.string.route_here), actions.onRouteHere, Modifier.weight(1f), leadingIcon = KtIcons.Nav, compact = true)
             KtButton(stringResource(R.string.from_here), actions.onFromHere, Modifier.weight(1f), variant = ButtonVariant.Tonal, compact = true)
@@ -125,6 +127,7 @@ fun LocationSheet(
         if (nearby.isNotEmpty()) {
             SectionLabel(stringResource(R.string.nearby_stops), Modifier.padding(top = 22.dp, bottom = 4.dp))
             nearby.forEach { NearbyStopRow(it) { actions.onOpenStop(it) } }
+        }
         }
     }
 }

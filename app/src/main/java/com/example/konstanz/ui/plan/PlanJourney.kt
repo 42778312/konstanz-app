@@ -58,6 +58,7 @@ import com.example.konstanz.ui.components.KtButton
 import com.example.konstanz.ui.components.LineBadge
 import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.StatusChip
+import com.example.konstanz.ui.components.dragSheetBody
 import com.example.konstanz.ui.components.dragSheetContainer
 import com.example.konstanz.ui.components.dragSheetHandle
 import com.example.konstanz.ui.components.dragSheetPeek
@@ -205,6 +206,7 @@ fun DetailsSheet(
                     CircleButton(KtIcons.Share, stringResource(R.string.share_route), onShare, size = 44.dp)
                 }
             }
+            Column(Modifier.dragSheetBody(dragState)) {
             Column(Modifier.padding(top = 20.dp)) {
                 journey.nodes().forEach { node ->
                     TimelineRow(node) {
@@ -217,6 +219,7 @@ fun DetailsSheet(
                 }
             }
             ArrivalSummary(journey)
+            }
         }
     }
 }

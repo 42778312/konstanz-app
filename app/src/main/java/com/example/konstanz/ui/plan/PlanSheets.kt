@@ -59,6 +59,7 @@ import com.example.konstanz.ui.components.Shimmer
 import com.example.konstanz.ui.components.StatusChip
 import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.SwitchRow
+import com.example.konstanz.ui.components.dragSheetBody
 import com.example.konstanz.ui.components.dragSheetContainer
 import com.example.konstanz.ui.components.dragSheetHandle
 import com.example.konstanz.ui.components.dragSheetPeek
@@ -439,7 +440,7 @@ fun ResultsSheet(
             }
         }
         Column(
-            Modifier.padding(top = 12.dp).verticalScroll(rememberScrollState()),
+            Modifier.dragSheetBody(dragState).padding(top = 12.dp).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             journeys.forEachIndexed { i, j -> JourneyCard(j, selected = i == selectedIndex) { onSelect(i) } }

@@ -54,6 +54,7 @@ import com.example.konstanz.ui.components.IconChip
 import com.example.konstanz.ui.components.KtButton
 import com.example.konstanz.ui.components.KtChip
 import com.example.konstanz.ui.components.SmallSpinner
+import com.example.konstanz.ui.components.dragSheetBody
 import com.example.konstanz.ui.components.dragSheetContainer
 import com.example.konstanz.ui.components.dragSheetHandle
 import com.example.konstanz.ui.components.dragSheetPeek
@@ -131,6 +132,7 @@ fun StopSheet(
             StopHeader(stop, walkMinutes, saved, actions, Modifier.dragSheetHandle(dragState))
         }
 
+        Column(Modifier.dragSheetBody(dragState)) {
         Row(
             Modifier
                 .horizontalScroll(rememberScrollState())
@@ -180,6 +182,7 @@ fun StopSheet(
             stringResource(R.string.route_from_here), actions.onRouteFromHere,
             Modifier.padding(top = 16.dp).fillMaxWidth(), leadingIcon = KtIcons.Nav, compact = true,
         )
+        }
     }
 
     if (pickingTime) {
