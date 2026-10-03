@@ -476,6 +476,13 @@ class DatabaseTransitRepository(
         val time = (departAt ?: now()).value
         suspend fun route(t: Int) = withContext(Dispatchers.Default) { router.route(origins, destinations, t) }
         fun trips(r: RouteResult) = r.parts.filterIsInstance<RoutePart.Ride>().map { it.trip }
+        // Earliest arrival alone may leave needlessly early (riding into town and back to catch the
+        // same last bus): leave as late as possible while still arriving at the same time.
+        suspend fun latest(first: RouteResult): RouteResult {
+            var r = first
+            repeat(30) { r = route(r.leaveAt + 1)?.takeIf { it.arrival == r.arrival } ?: return r }
+            return r
+        }
 
         // Boarding the same buses at another stop is not a new option: one per set of trips.
         val byTrips = LinkedHashMap<List<Int>, RouteResult>()
@@ -484,7 +491,7 @@ class DatabaseTransitRepository(
             var t = time
             repeat(10) {
                 if (byTrips.size >= 4) return@repeat
-                val r = route(t) ?: return@repeat
+                val r = route(t)?.let { latest(it) } ?: return@repeat
                 val known = byTrips[trips(r)]
                 if (known == null || r.arrival - r.leaveAt < known.arrival - known.leaveAt) byTrips[trips(r)] = r
                 t = r.leaveAt + 1
@@ -500,7 +507,11 @@ class DatabaseTransitRepository(
                 t = r.leaveAt + 1
             }
         }
-        val results = if (arriveBy) byTrips.values.sortedByDescending { it.leaveAt }.take(4) else byTrips.values.toList()
+        // Drop options another one beats: leaving no earlier and arriving no later.
+        val kept = byTrips.values.filter { r ->
+            byTrips.values.none { o -> o !== r && o.leaveAt >= r.leaveAt && o.arrival <= r.arrival && (o.leaveAt > r.leaveAt || o.arrival < r.arrival) }
+        }
+        val results = if (arriveBy) kept.sortedByDescending { it.leaveAt }.take(4) else kept
         val options = results.mapIndexed { i, r -> toJourney("rt-$time-$i-${(from + to).hashCode()}", r, a, b) }.toMutableList()
 
         // Walking the whole way: always for short trips (≤ 20 min, no waiting), otherwise when about as quick as the bus.
