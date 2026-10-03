@@ -7,10 +7,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import com.example.konstanz.data.SavedStore
 import com.example.konstanz.data.Texts
 import com.example.konstanz.data.transit.Transit
 import com.example.konstanz.ui.theme.KonstanzTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +23,9 @@ class MainActivity : ComponentActivity() {
         Texts.init(applicationContext)
         SavedStore.init(applicationContext)
         Transit.init(applicationContext)
+        // Parses the place search index in the background so it's ready before Search is opened,
+        // instead of stalling the first keystroke there.
+        lifecycleScope.launch(Dispatchers.Default) { Transit.repository.warmSearch() }
         // Fade the system splash into the Compose splash (same red, same logo tile).
         splash.setOnExitAnimationListener { provider ->
             provider.view.animate()

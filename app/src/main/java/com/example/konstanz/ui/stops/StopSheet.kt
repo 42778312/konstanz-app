@@ -6,6 +6,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +14,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,16 +42,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import com.example.konstanz.data.transit.Line
 import com.example.konstanz.data.transit.MockTransitRepository
+import com.example.konstanz.data.transit.Minutes
 import com.example.konstanz.data.transit.RealtimeInfo
 import com.example.konstanz.data.transit.Stop
 import com.example.konstanz.data.transit.StopDeparture
-import com.example.konstanz.ui.components.ButtonVariant
 import com.example.konstanz.ui.components.DepartureRow
+import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.IconChip
 import com.example.konstanz.ui.components.KtButton
-import com.example.konstanz.ui.components.RealtimeUnavailableBanner
+import com.example.konstanz.ui.components.KtChip
 import com.example.konstanz.ui.components.SmallSpinner
+import com.example.konstanz.ui.components.dragSheetContainer
+import com.example.konstanz.ui.components.dragSheetHandle
+import com.example.konstanz.ui.components.dragSheetPeek
+import com.example.konstanz.ui.components.rememberDragSheetState
 import com.example.konstanz.ui.components.toRow
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
@@ -64,27 +79,37 @@ data class StopSheetActions(
     val onClose: () -> Unit,
     val onToggleSave: () -> Unit,
     val onDepartureClick: (StopDeparture) -> Unit,
-    val onAllDepartures: () -> Unit,
     val onRouteFromHere: () -> Unit,
 )
 
 /**
  * 12 Bus stop sheet (and 33b while live times load) on top of the map.
  * The timetable shows immediately; [realtime] null = still checking live data.
+ * Line filter + start time mirror the former "All departures" page, folded into the sheet itself.
  */
 @Composable
 fun StopSheet(
     stop: Stop,
     walkMinutes: Int,
+    lines: List<Line>,
+    selectedLine: String?,
+    onSelectLine: (String?) -> Unit,
+    from: Minutes,
+    now: Minutes,
+    onChangeFrom: (Minutes) -> Unit,
     departures: List<StopDeparture>,
     realtime: RealtimeInfo?,
     saved: Boolean,
     actions: StopSheetActions,
     modifier: Modifier = Modifier,
+    /** Shared with the map screen so dragging the map also minimizes this sheet. */
+    dragState: DragSheetState = rememberDragSheetState(),
 ) {
     val ready = realtime != null
+    var pickingTime by rememberSaveable { mutableStateOf(false) }
     Column(
         modifier
+            .dragSheetContainer(dragState)
             .fillMaxWidth()
             .sheetShadow(Radius.Sheet)
             .clip(Radius.Sheet)
@@ -92,49 +117,88 @@ fun StopSheet(
             .navigationBarsPadding()
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
     ) {
-        Box(Modifier.align(Alignment.CenterHorizontally).size(width = 36.dp, height = 5.dp).background(SkeletonBar, Radius.Pill))
-        Spacer(Modifier.height(15.dp))
+        Column(Modifier.dragSheetPeek(dragState)) {
+            Box(
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(width = 36.dp, height = 5.dp)
+                    .background(SkeletonBar, Radius.Pill)
+                    .dragSheetHandle(dragState),
+            )
+            Spacer(Modifier.height(15.dp))
 
-        StopHeader(stop, walkMinutes, saved, actions)
+            StopHeader(stop, walkMinutes, saved, actions, Modifier.dragSheetHandle(dragState))
+        }
 
-        if (realtime?.available == false) {
-            // Artboard 32: say so, then show the timetable.
-            RealtimeUnavailableBanner(realtime.updatedSecondsAgo?.let { it / 60 }, Modifier.padding(top = 14.dp))
-            Text(stringResource(R.string.scheduled_departures).uppercase(), Modifier.padding(top = 14.dp), style = KonstanzType.Label, color = Ink3)
-        } else Row(
-            Modifier.fillMaxWidth().padding(top = 18.dp),
+        Row(
+            Modifier
+                .horizontalScroll(rememberScrollState())
+                .padding(top = 16.dp)
+                .selectableGroup(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            KtChip(stringResource(R.string.all_lines), { onSelectLine(null) }, selected = selectedLine == null)
+            lines.forEach { l -> KtChip(stringResource(R.string.line_x, l.id), { onSelectLine(l.id) }, selected = selectedLine == l.id) }
+        }
+
+        Row(
+            Modifier.fillMaxWidth().padding(top = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(stringResource(R.string.next_departures).uppercase(), style = KonstanzType.Label, color = Ink3, maxLines = 1)
-            // The status gives way (ellipsis) before the label wraps.
+            TimeButton(label = dayLabel(from, now), onClick = { pickingTime = true })
+            // The status gives way (ellipsis) before it pushes the time button off-screen.
             RealtimeStatus(realtime, Modifier.weight(1f, fill = false).padding(start = 12.dp))
         }
 
-        departures.forEach { d ->
-            DepartureRow(
-                d.toRow(),
-                onClick = { actions.onDepartureClick(d) },
-                verticalPadding = 12.dp,
-                realtimeReady = ready,
-            )
+        Column(
+            Modifier
+                .padding(top = 10.dp)
+                .heightIn(max = 260.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            if (departures.isEmpty()) {
+                Text(
+                    stringResource(R.string.no_more_departures, from.format()),
+                    Modifier.padding(vertical = 12.dp),
+                    style = KonstanzType.BodySmall,
+                    color = Ink3,
+                )
+            }
+            departures.forEach { d ->
+                DepartureRow(
+                    d.toRow(),
+                    onClick = { actions.onDepartureClick(d) },
+                    verticalPadding = 12.dp,
+                    realtimeReady = ready,
+                )
+            }
         }
 
-        Row(Modifier.padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            KtButton(stringResource(R.string.all_departures), actions.onAllDepartures, Modifier.weight(1f), variant = ButtonVariant.Neutral, compact = true)
-            KtButton(stringResource(R.string.route_from_here), actions.onRouteFromHere, Modifier.weight(1f), leadingIcon = KtIcons.Nav, compact = true)
-        }
+        KtButton(
+            stringResource(R.string.route_from_here), actions.onRouteFromHere,
+            Modifier.padding(top = 16.dp).fillMaxWidth(), leadingIcon = KtIcons.Nav, compact = true,
+        )
+    }
+
+    if (pickingTime) {
+        TimeDialog(
+            now = now,
+            selected = from,
+            onDismiss = { pickingTime = false },
+            onSelect = { onChangeFrom(it); pickingTime = false },
+        )
     }
 }
 
 /** Red stop tile, name, "Bus stop · Platforms A–D · 4 min walk", save and close. */
 @Composable
-private fun StopHeader(stop: Stop, walkMinutes: Int, saved: Boolean, actions: StopSheetActions) {
+private fun StopHeader(stop: Stop, walkMinutes: Int, saved: Boolean, actions: StopSheetActions, dragModifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        Box(Modifier.size(44.dp).background(Primary, RoundedCornerShape(13.dp)), contentAlignment = Alignment.Center) {
+        Box(Modifier.size(44.dp).background(Primary, RoundedCornerShape(13.dp)).then(dragModifier), contentAlignment = Alignment.Center) {
             KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 24.dp, tint = White)
         }
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(1f).then(dragModifier)) {
             Text(
                 stop.name,
                 Modifier.semantics { heading() },
@@ -201,20 +265,30 @@ internal fun RealtimeStatus(realtime: RealtimeInfo?, modifier: Modifier = Modifi
 
 private val previewStop = Stop("bahnhof", "Konstanz Bahnhof", listOf("12", "5", "8", "9"), com.example.konstanz.data.transit.MapPoint(660f, 868f), "A–D")
 
+private val previewRepo = MockTransitRepository()
+
 @Preview(widthDp = 390)
 @Composable
 private fun StopSheetPreview() {
-    val deps = kotlinx.coroutines.runBlocking { MockTransitRepository().departures("bahnhof", limit = 3) }
+    val deps = kotlinx.coroutines.runBlocking { previewRepo.departures("bahnhof", limit = 8) }
+    val lines = kotlinx.coroutines.runBlocking { previewRepo.linesAt("bahnhof") }
     KonstanzTheme {
-        StopSheet(previewStop, 4, deps, RealtimeInfo(true, 30), saved = false, actions = StopSheetActions({}, {}, {}, {}, {}))
+        StopSheet(
+            previewStop, 4, lines, null, {}, previewRepo.now(), previewRepo.now(), {},
+            deps, RealtimeInfo(true, 30), saved = false, actions = StopSheetActions({}, {}, {}, {}),
+        )
     }
 }
 
 @Preview(widthDp = 390, name = "Loading live times (33b)")
 @Composable
 private fun StopSheetLoadingPreview() {
-    val deps = kotlinx.coroutines.runBlocking { MockTransitRepository().departures("bahnhof", limit = 3) }
+    val deps = kotlinx.coroutines.runBlocking { previewRepo.departures("bahnhof", limit = 8) }
+    val lines = kotlinx.coroutines.runBlocking { previewRepo.linesAt("bahnhof") }
     KonstanzTheme {
-        StopSheet(previewStop, 4, deps, realtime = null, saved = true, actions = StopSheetActions({}, {}, {}, {}, {}))
+        StopSheet(
+            previewStop, 4, lines, null, {}, previewRepo.now(), previewRepo.now(), {},
+            deps, realtime = null, saved = true, actions = StopSheetActions({}, {}, {}, {}),
+        )
     }
 }

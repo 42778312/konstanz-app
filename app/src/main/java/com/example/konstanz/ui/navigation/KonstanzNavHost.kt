@@ -118,7 +118,6 @@ fun KonstanzNavHost(navController: NavHostController = rememberNavController()) 
                 onOpenLicenses = { navController.navigate(Routes.LICENSES) },
                 onOpenPrivacy = { navController.navigate(Routes.PRIVACY) },
                 onOpenStop = { navController.navigate(Routes.stop(it)) },
-                onOpenAllDepartures = { navController.navigate(Routes.stopDepartures(it, null)) },
                 onOpenDeparture = { trip, stop, at -> navController.navigate(Routes.trip(trip, stop, at)) },
                 onOpenSearch = { navController.navigate(Routes.search(it)) },
                 onOpenPlanner = { from, to -> navController.navigate(Routes.plan(from, to)) },

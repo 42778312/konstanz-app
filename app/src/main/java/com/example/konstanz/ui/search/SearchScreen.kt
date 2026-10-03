@@ -128,6 +128,8 @@ fun SearchRoute(initialQuery: String, actions: SearchActions, pickMode: Boolean 
     val shortcuts = remember { repo.searchShortcuts() }
     var knownCategories by remember { mutableStateOf(shortcuts) }
     val category = categoryKey?.let { k -> knownCategories.firstOrNull { it.key == k } }
+    // Belt-and-braces: normally already warm from app start (Transit.init); coalesces for free if so.
+    LaunchedEffect(Unit) { repo.warmSearch() }
     // Small debounce so typing stays smooth; results update as you type.
     val results by produceState<SearchResults?>(null, query, filter, category) {
         if (category != null) {

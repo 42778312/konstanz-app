@@ -184,6 +184,8 @@ fun InteractiveMap(
     asset: String = "maps/city.svg",
     onTap: ((MapPoint) -> Unit)? = null,
     onLongPress: ((MapPoint) -> Unit)? = null,
+    /** Dragging or pinching the map (not just tapping it): callers use this to minimize open sheets. */
+    onGestureStart: () -> Unit = {},
     overlays: @Composable MapOverlayScope.() -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -206,18 +208,21 @@ fun InteractiveMap(
         Box(
             Modifier
                 .fillMaxSize()
-                .pointerInput(camera, w, h) {
+                .pointerInput(camera, w, h, onGestureStart) {
                     detectTransformGestures { centroid, pan, zoom, _ ->
+                        onGestureStart()
                         camera.transform(pan, zoom, centroid, w, h)
                     }
                 }
-                .pointerInput(camera, w, h, onTap, onLongPress) {
+                .pointerInput(camera, w, h, onTap, onLongPress, onGestureStart) {
                     detectTapGestures(
                         onDoubleTap = { at ->
+                            onGestureStart()
                             val p = camera.projection(w, h).toMap(at)
                             scope.launch { camera.animateTo(MapPoint(p.x, p.y), camera.zoom * 2f, 300) }
                         },
                         onTap = { at ->
+                            onGestureStart()
                             val p = camera.projection(w, h).toMap(at)
                             onTap?.invoke(MapPoint(p.x, p.y))
                         },

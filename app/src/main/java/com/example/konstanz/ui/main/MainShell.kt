@@ -57,7 +57,6 @@ fun MainShell(
     onOpenLicenses: () -> Unit,
     onOpenPrivacy: () -> Unit,
     onOpenStop: (stopId: String) -> Unit,
-    onOpenAllDepartures: (stopId: String) -> Unit,
     onOpenDeparture: (tripId: String, stopId: String, at: Int) -> Unit,
     onOpenSearch: (query: String) -> Unit,
     onOpenPlanner: (from: String, to: String) -> Unit,
@@ -123,7 +122,6 @@ fun MainShell(
                             }
                         },
                         onOpenStopDetails = { onOpenStop(it.id) },
-                        onOpenAllDepartures = { onOpenAllDepartures(it.id) },
                         onOpenDeparture = { departure, stop -> onOpenDeparture(departure.tripId, stop.id, departure.scheduled.value) },
                         onRouteToPlace = { onOpenPlanner("My location", it.name) },
                         onRouteFromPlace = { onOpenPlanner(it.name, "") },
@@ -174,5 +172,5 @@ private fun NavHostController.selectTab(tab: MainTab) {
 @Preview(widthDp = 390, heightDp = 844)
 @Composable
 private fun MainShellPreview() {
-    KonstanzTheme { MainShell(onOpenAbout = {}, onOpenLicenses = {}, onOpenPrivacy = {}, onOpenStop = {}, onOpenAllDepartures = {}, onOpenDeparture = { _, _, _ -> }, onOpenSearch = {}, onOpenPlanner = { _, _ -> }, onChooseSavedPlace = {}, onOpenOfflineData = {}, onOpenSimulate = {}, onOpenDesignSystem = {}) }
+    KonstanzTheme { MainShell(onOpenAbout = {}, onOpenLicenses = {}, onOpenPrivacy = {}, onOpenStop = {}, onOpenDeparture = { _, _, _ -> }, onOpenSearch = {}, onOpenPlanner = { _, _ -> }, onChooseSavedPlace = {}, onOpenOfflineData = {}, onOpenSimulate = {}, onOpenDesignSystem = {}) }
 }

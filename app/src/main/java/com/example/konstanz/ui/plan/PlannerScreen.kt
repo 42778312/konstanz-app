@@ -55,6 +55,7 @@ import com.example.konstanz.data.transit.Minutes
 import com.example.konstanz.data.transit.Stop
 import com.example.konstanz.data.transit.Transit
 import com.example.konstanz.ui.components.StatusPill
+import com.example.konstanz.ui.components.rememberDragSheetState
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.map.DestinationMarker
@@ -235,6 +236,10 @@ private fun PlannerScreen(
     val walkSheetHeight = windowHeight() * 0.46f
     val density = LocalDensity.current
     val statusTop = WindowInsets.statusBars.getTop(density)
+    // Shared by Results/Details: dragging the map minimizes whichever is open; a fresh step
+    // always starts expanded.
+    val sheetDragState = rememberDragSheetState()
+    LaunchedEffect(step) { sheetDragState.collapsed = false }
 
     // Framing per step. The real map fits the real places and routes into the map left visible above
     // each step's sheet (design px on a 390-wide phone); the design sample uses the artboards' view boxes.
@@ -288,9 +293,13 @@ private fun PlannerScreen(
     }
 
     Box(Modifier.fillMaxSize().background(MapLand).onSizeChanged { mapWidth = it.width; mapHeight = it.height }) {
-        InteractiveMap(camera, Modifier.fillMaxSize()) {
+        InteractiveMap(camera, Modifier.fillMaxSize(), onGestureStart = { sheetDragState.collapsed = true }) {
             when (step) {
-                PlanStep.Results, PlanStep.RouteMap, PlanStep.Details -> RouteLayer(journeys, journey)
+                // Comparing options: every alternative, greyed out behind the selected one.
+                PlanStep.Results -> RouteLayer(journeys, journey)
+                // Looking at one route (swiping its cards, or its full itinerary): only that route,
+                // so the others don't cut across the map and confuse which line is which.
+                PlanStep.RouteMap, PlanStep.Details -> if (journey != null) RouteLayer(listOf(journey), journey)
                 PlanStep.Walk -> if (journey != null) RouteLayer(listOf(journey), journey, focus = walk)
                 else -> Unit
             }
@@ -348,7 +357,7 @@ private fun PlannerScreen(
                     onOptions = { onPrefs(true) }, onFind = onSearch, onClose = actions.onClose,
                 )
                 PlanStep.Loading -> LoadingSheet(loadingStep)
-                PlanStep.Results -> ResultsSheet(journeys, selected, options.preference, onSelect = onSelect, onOptions = { onPrefs(true) })
+                PlanStep.Results -> ResultsSheet(journeys, selected, options.preference, onSelect = onSelect, onOptions = { onPrefs(true) }, dragState = sheetDragState)
                 PlanStep.NoRoute -> NoRouteSheet(
                     time = if (options.timeMode == TimeMode.Now) now else options.time,
                     onChangeDestination = actions.onPickTo,
@@ -373,6 +382,7 @@ private fun PlannerScreen(
                         onOpenRide = actions.onOpenRide,
                         onShowWalk = onShowWalk,
                         modifier = Modifier.statusBarsPadding().padding(top = 140.dp),
+                        dragState = sheetDragState,
                     )
                 }
                 PlanStep.Walk -> if (journey != null && walk != null) {

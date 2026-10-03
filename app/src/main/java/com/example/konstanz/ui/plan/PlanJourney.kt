@@ -56,7 +56,12 @@ import com.example.konstanz.data.transit.Minutes
 import com.example.konstanz.ui.components.ButtonVariant
 import com.example.konstanz.ui.components.KtButton
 import com.example.konstanz.ui.components.LineBadge
+import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.StatusChip
+import com.example.konstanz.ui.components.dragSheetContainer
+import com.example.konstanz.ui.components.dragSheetHandle
+import com.example.konstanz.ui.components.dragSheetPeek
+import com.example.konstanz.ui.components.rememberDragSheetState
 import com.example.konstanz.ui.components.toTripStatus
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
@@ -150,6 +155,10 @@ private fun Journey.nodes(): List<Node> {
     return out
 }
 
+/**
+ * Drag the header down to collapse to just "Your journey · …" (Google Maps style), drag it back
+ * up to see the full itinerary again.
+ */
 @Composable
 fun DetailsSheet(
     journey: Journey,
@@ -158,8 +167,15 @@ fun DetailsSheet(
     onOpenRide: (Leg.Ride) -> Unit,
     onShowWalk: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    /** Shared with the map screen so dragging the map also minimizes this sheet. */
+    dragState: DragSheetState = rememberDragSheetState(),
 ) {
-    Box(modifier.fillMaxSize().sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(White)) {
+    Box(
+        modifier
+            .dragSheetContainer(dragState)
+            .fillMaxSize()
+            .sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(White),
+    ) {
         Column(
             Modifier
                 .fillMaxSize()
@@ -167,18 +183,26 @@ fun DetailsSheet(
                 .navigationBarsPadding()
                 .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 24.dp),
         ) {
-            Box(Modifier.align(Alignment.CenterHorizontally).size(width = 36.dp, height = 5.dp).background(com.example.konstanz.ui.theme.SkeletonBar, Radius.Pill))
-            Spacer(Modifier.height(15.dp))
-            Row(verticalAlignment = Alignment.Top) {
-                Column(Modifier.weight(1f)) {
-                    Text(stringResource(R.string.your_journey), Modifier.semantics { heading() }, style = KonstanzType.Title.copy(fontSize = 24.sp, letterSpacing = (-0.01).em), color = Ink)
-                    Text(
-                        "${journey.start.format()} – ${journey.end.format()} · ${stringResource(R.string.minutes_short, journey.minutes)} · ${journey.summary().substringBefore(" ·")}",
-                        style = KonstanzType.BodySmall.copy(fontWeight = FontWeight.Bold, fontFeatureSettings = "tnum"),
-                        color = Ink2,
-                    )
+            Column(Modifier.dragSheetPeek(dragState)) {
+                Box(
+                    Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .size(width = 36.dp, height = 5.dp)
+                        .background(com.example.konstanz.ui.theme.SkeletonBar, Radius.Pill)
+                        .dragSheetHandle(dragState),
+                )
+                Spacer(Modifier.height(15.dp))
+                Row(verticalAlignment = Alignment.Top) {
+                    Column(Modifier.weight(1f).dragSheetHandle(dragState)) {
+                        Text(stringResource(R.string.your_journey), Modifier.semantics { heading() }, style = KonstanzType.Title.copy(fontSize = 24.sp, letterSpacing = (-0.01).em), color = Ink)
+                        Text(
+                            "${journey.start.format()} – ${journey.end.format()} · ${stringResource(R.string.minutes_short, journey.minutes)} · ${journey.summary().substringBefore(" ·")}",
+                            style = KonstanzType.BodySmall.copy(fontWeight = FontWeight.Bold, fontFeatureSettings = "tnum"),
+                            color = Ink2,
+                        )
+                    }
+                    CircleButton(KtIcons.Share, stringResource(R.string.share_route), onShare, size = 44.dp)
                 }
-                CircleButton(KtIcons.Share, stringResource(R.string.share_route), onShare, size = 44.dp)
             }
             Column(Modifier.padding(top = 20.dp)) {
                 journey.nodes().forEach { node ->

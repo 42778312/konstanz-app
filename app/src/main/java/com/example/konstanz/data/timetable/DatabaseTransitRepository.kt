@@ -325,6 +325,12 @@ class DatabaseTransitRepository(
         )
     }
 
+    /** Parses the ~29k-entry place index and builds the station network ahead of the first keystroke. */
+    override suspend fun warmSearch() {
+        finder.entries()
+        stopEntries()
+    }
+
     override suspend fun nearby(category: SearchCategory): List<SearchHit> {
         val (myLat, myLon) = Geo.latLon(myLocation())
         return finder.nearby(category.key, myLat, myLon).mapNotNull { hit(it.entry, it.meters) }

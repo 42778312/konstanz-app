@@ -183,12 +183,12 @@ fun AllDeparturesScreen(
     }
 }
 
-private fun dayLabel(from: Minutes, now: Minutes) =
+internal fun dayLabel(from: Minutes, now: Minutes) =
     Texts.get(R.string.today_from, from.format())
 
 /** "📅 Today, from 14:30 ⌄" */
 @Composable
-private fun TimeButton(label: String, onClick: () -> Unit) {
+internal fun TimeButton(label: String, onClick: () -> Unit) {
     Row(
         Modifier
             .heightIn(min = 44.dp)
@@ -207,7 +207,7 @@ private fun TimeButton(label: String, onClick: () -> Unit) {
 
 /** Start time for the list: now or the next full hours of today. */
 @Composable
-private fun TimeDialog(now: Minutes, selected: Minutes, onDismiss: () -> Unit, onSelect: (Minutes) -> Unit) {
+internal fun TimeDialog(now: Minutes, selected: Minutes, onDismiss: () -> Unit, onSelect: (Minutes) -> Unit) {
     val nextHour = (now.value / 60 + 1) * 60
     val options = listOf(now) + (0 until 4).map { Minutes(nextHour + it * 60) }
     AlertDialog(

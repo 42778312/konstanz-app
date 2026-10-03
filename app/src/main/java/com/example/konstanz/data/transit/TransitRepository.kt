@@ -50,6 +50,12 @@ interface TransitRepository {
 
     suspend fun search(query: String, filter: SearchFilter = SearchFilter.All): SearchResults
 
+    /**
+     * Loads whatever [search] needs lazily (the place index, the station network) so the first
+     * keystroke doesn't pay for it. Safe to call more than once or alongside a real search.
+     */
+    suspend fun warmSearch() {}
+
     /** Places of one kind by distance from the user ("Cafés nearby"). */
     suspend fun nearby(category: SearchCategory): List<SearchHit> = emptyList()
 

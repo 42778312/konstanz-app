@@ -35,7 +35,12 @@ import com.example.konstanz.ui.components.BadgeSize
 import com.example.konstanz.ui.components.ButtonVariant
 import com.example.konstanz.ui.components.KtButton
 import com.example.konstanz.ui.components.LineBadge
+import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.SectionLabel
+import com.example.konstanz.ui.components.dragSheetContainer
+import com.example.konstanz.ui.components.dragSheetHandle
+import com.example.konstanz.ui.components.dragSheetPeek
+import com.example.konstanz.ui.components.rememberDragSheetState
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.theme.Ink
@@ -65,9 +70,12 @@ fun LocationSheet(
     saved: Boolean,
     actions: LocationSheetActions,
     modifier: Modifier = Modifier,
+    /** Shared with the map screen so dragging the map also minimizes this sheet. */
+    dragState: DragSheetState = rememberDragSheetState(),
 ) {
     Column(
         modifier
+            .dragSheetContainer(dragState)
             .fillMaxWidth()
             .sheetShadow(Radius.Sheet)
             .clip(Radius.Sheet)
@@ -75,21 +83,29 @@ fun LocationSheet(
             .navigationBarsPadding()
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
     ) {
-        Box(Modifier.align(Alignment.CenterHorizontally).size(width = 36.dp, height = 5.dp).background(SkeletonBar, Radius.Pill))
-        Spacer(Modifier.height(15.dp))
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text((place.category ?: place.kind.label).uppercase(), style = KonstanzType.Label, color = Ink3)
-            Text(
-                place.name,
-                Modifier.semantics { heading() },
-                style = KonstanzType.TitleL.copy(fontSize = 26.sp, letterSpacing = (-0.02).em),
-                color = Ink,
+        Column(Modifier.dragSheetPeek(dragState)) {
+            Box(
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(width = 36.dp, height = 5.dp)
+                    .background(SkeletonBar, Radius.Pill)
+                    .dragSheetHandle(dragState),
             )
-            Text(
-                "${place.address} · ${formatKm(place.distanceKm)}",
-                style = KonstanzType.BodySmall,
-                color = Ink2,
-            )
+            Spacer(Modifier.height(15.dp))
+            Column(Modifier.dragSheetHandle(dragState), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                Text((place.category ?: place.kind.label).uppercase(), style = KonstanzType.Label, color = Ink3)
+                Text(
+                    place.name,
+                    Modifier.semantics { heading() },
+                    style = KonstanzType.TitleL.copy(fontSize = 26.sp, letterSpacing = (-0.02).em),
+                    color = Ink,
+                )
+                Text(
+                    "${place.address} · ${formatKm(place.distanceKm)}",
+                    style = KonstanzType.BodySmall,
+                    color = Ink2,
+                )
+            }
         }
         Row(Modifier.padding(top = 18.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             KtButton(stringResource(R.string.route_here), actions.onRouteHere, Modifier.weight(1f), leadingIcon = KtIcons.Nav, compact = true)

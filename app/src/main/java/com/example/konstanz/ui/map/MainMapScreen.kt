@@ -20,7 +20,9 @@ import com.example.konstanz.data.transit.StopDeparture
 import com.example.konstanz.ui.stops.StopSheet
 import com.example.konstanz.ui.stops.StopSheetActions
 import com.example.konstanz.ui.components.ButtonVariant
+import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.KtButton
+import com.example.konstanz.ui.components.rememberDragSheetState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -113,8 +115,6 @@ data class MainMapActions(
     val onRepairTimetable: () -> Unit = {},
     /** Full stop page (artboard 13). */
     val onOpenStopDetails: (Stop) -> Unit,
-    /** All departures of a stop (artboard 14). */
-    val onOpenAllDepartures: (Stop) -> Unit = {},
     /** Departure details (artboard 15), seen from the stop it was tapped at. */
     val onOpenDeparture: (StopDeparture, Stop) -> Unit,
     val onRouteFrom: (Stop) -> Unit,
@@ -212,16 +212,16 @@ fun MainMapRoute(actions: MainMapActions, command: MapCommand? = null, onCommand
         onSelect = { closeAll(); selection = it },
         selectedStop = selectedStop,
         onStopSelected = { closeAll(); selectedStopId = it?.id },
-        stopSheet = { stop, sheetModifier ->
-            StopSheetContent(stop, actions, onClose = { selectedStopId = null }, modifier = sheetModifier)
+        stopSheet = { stop, dragState, sheetModifier ->
+            StopSheetContent(stop, dragState, actions, onClose = { selectedStopId = null }, modifier = sheetModifier)
         },
         selectedPlace = selectedPlace,
         onClosePlace = {
             selectedPlaceId = null
             actions.onOpenSearch(SearchSession.lastQuery)
         },
-        placeSheet = { place, sheetModifier ->
-            PlaceSheetContent(place, actions, onOpenStop = { closeAll(); selectedStopId = it }, modifier = sheetModifier)
+        placeSheet = { place, dragState, sheetModifier ->
+            PlaceSheetContent(place, dragState, actions, onOpenStop = { closeAll(); selectedStopId = it }, modifier = sheetModifier)
         },
         pickRequests = pickRequests,
         locationUnavailable = locationUnavailable,
@@ -244,7 +244,7 @@ private fun hasLocationPermission(context: android.content.Context): Boolean =
 
 /** Location details sheet with nearby stops and save state. */
 @Composable
-private fun PlaceSheetContent(place: Place, actions: MainMapActions, onOpenStop: (String) -> Unit, modifier: Modifier) {
+private fun PlaceSheetContent(place: Place, dragState: DragSheetState, actions: MainMapActions, onOpenStop: (String) -> Unit, modifier: Modifier) {
     val nearby by produceState(emptyList<NearbyStop>(), place.id) { value = Transit.repository.nearbyStops(place.point, limit = 2) }
     LocationSheet(
         place = place,
@@ -257,14 +257,20 @@ private fun PlaceSheetContent(place: Place, actions: MainMapActions, onOpenStop:
             onOpenStop = { onOpenStop(it.stop.id) },
         ),
         modifier = modifier,
+        dragState = dragState,
     )
 }
 
 /** Loads a stop's next departures (instantly) and its live status (takes a moment, artboard 33b). */
 @Composable
-private fun StopSheetContent(stop: Stop, actions: MainMapActions, onClose: () -> Unit, modifier: Modifier) {
+private fun StopSheetContent(stop: Stop, dragState: DragSheetState, actions: MainMapActions, onClose: () -> Unit, modifier: Modifier) {
     val repo = Transit.repository
-    val departures by produceState(emptyList<StopDeparture>(), stop.id) { value = repo.departures(stop.id, limit = 3, includeCancelled = false) }
+    var line by rememberSaveable(stop.id) { mutableStateOf<String?>(null) }
+    var fromMinutes by rememberSaveable(stop.id) { mutableIntStateOf(repo.now().value) }
+    val lines by produceState(emptyList<com.example.konstanz.data.transit.Line>(), stop.id) { value = repo.linesAt(stop.id) }
+    val departures by produceState(emptyList<StopDeparture>(), stop.id, line, fromMinutes) {
+        value = repo.departures(stop.id, from = com.example.konstanz.data.transit.Minutes(fromMinutes), limit = 20, line = line, includeCancelled = false)
+    }
     // Realtime is an overlay: when it's unavailable the timetable is shown as scheduled (artboard 32).
     val realtimeOn = AppStatus.realtimeAvailable
     val realtime by produceState<RealtimeInfo?>(null, stop.id, realtimeOn) {
@@ -275,6 +281,12 @@ private fun StopSheetContent(stop: Stop, actions: MainMapActions, onClose: () ->
     StopSheet(
         stop = stop,
         walkMinutes = remember(stop.id) { repo.walkMinutes(repo.myLocation(), stop.point) },
+        lines = lines,
+        selectedLine = line,
+        onSelectLine = { line = it },
+        from = com.example.konstanz.data.transit.Minutes(fromMinutes),
+        now = repo.now(),
+        onChangeFrom = { fromMinutes = it.value },
         departures = if (realtimeOn) departures else departures.map { it.copy(realtime = com.example.konstanz.data.transit.Realtime.Scheduled) },
         realtime = realtime,
         saved = saved,
@@ -282,10 +294,10 @@ private fun StopSheetContent(stop: Stop, actions: MainMapActions, onClose: () ->
             onClose = onClose,
             onToggleSave = { SavedStore.toggleStop(stop.id, stop.name, departures.firstOrNull()) },
             onDepartureClick = { actions.onOpenDeparture(it, stop) },
-            onAllDepartures = { actions.onOpenAllDepartures(stop) },
             onRouteFromHere = { actions.onRouteFrom(stop) },
         ),
         modifier = modifier,
+        dragState = dragState,
     )
 }
 
@@ -305,10 +317,10 @@ fun MainMapScreen(
     onSelect: (MapPoint?) -> Unit = {},
     selectedStop: Stop? = null,
     onStopSelected: (Stop?) -> Unit = {},
-    stopSheet: @Composable (Stop, Modifier) -> Unit = { _, _ -> },
+    stopSheet: @Composable (Stop, DragSheetState, Modifier) -> Unit = { _, _, _ -> },
     selectedPlace: Place? = null,
     onClosePlace: () -> Unit = {},
-    placeSheet: @Composable (Place, Modifier) -> Unit = { _, _ -> },
+    placeSheet: @Composable (Place, DragSheetState, Modifier) -> Unit = { _, _, _ -> },
     pickRequests: Int = 0,
     locationUnavailable: Boolean = false,
     onEnableLocation: () -> Unit = {},
@@ -324,6 +336,10 @@ fun MainMapScreen(
     val picking = selection != null
     val stopOpen = selectedStop != null
     val placeOpen = selectedPlace != null
+    // Shared by the stop/place sheet: dragging the map minimizes whichever is open; a fresh
+    // selection always starts expanded.
+    val sheetDragState = rememberDragSheetState()
+    LaunchedEffect(selectedStop?.id, selectedPlace?.id) { sheetDragState.collapsed = false }
     // Stop, place or pin: the map is showing one thing, with its own sheet (bar hidden, blue locate).
     val focused = picking || stopOpen || placeOpen || shownTrip != null
     // The route being prepared in the From / To card.
@@ -391,7 +407,11 @@ fun MainMapScreen(
     }
 
     Box(modifier.fillMaxSize().background(com.example.konstanz.ui.theme.MapLand).onSizeChanged { mapWidthPx = it.width; mapHeightPx = it.height }) {
-        InteractiveMap(camera, Modifier.fillMaxSize(), onLongPress = { onSelect(it) }) {
+        InteractiveMap(
+            camera, Modifier.fillMaxSize(),
+            onLongPress = { onSelect(it) },
+            onGestureStart = { sheetDragState.collapsed = true },
+        ) {
             // Read through derivedStateOf: the overlays rebuild when a threshold is crossed, not on every frame of a zoom.
             val labelsVisible by remember { derivedStateOf { camera.zoom >= 0.6f } }
             val stationNameVisible by remember { derivedStateOf { camera.zoom >= 0.8f } }
@@ -491,9 +511,9 @@ fun MainMapScreen(
             if (shownTrip != null) {
                 TripSheet(shownTrip, onCloseTrip, sheetModifier)
             } else if (selectedStop != null) {
-                stopSheet(selectedStop, sheetModifier)
+                stopSheet(selectedStop, sheetDragState, sheetModifier)
             } else if (selectedPlace != null) {
-                placeSheet(selectedPlace, sheetModifier)
+                placeSheet(selectedPlace, sheetDragState, sheetModifier)
             } else if (picking) {
                 SelectedLocationSheet(
                     info = selectedInfo,

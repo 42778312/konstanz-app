@@ -57,7 +57,12 @@ import com.example.konstanz.ui.components.RouteCard
 import com.example.konstanz.ui.components.SectionLabel
 import com.example.konstanz.ui.components.Shimmer
 import com.example.konstanz.ui.components.StatusChip
+import com.example.konstanz.ui.components.DragSheetState
 import com.example.konstanz.ui.components.SwitchRow
+import com.example.konstanz.ui.components.dragSheetContainer
+import com.example.konstanz.ui.components.dragSheetHandle
+import com.example.konstanz.ui.components.dragSheetPeek
+import com.example.konstanz.ui.components.rememberDragSheetState
 import com.example.konstanz.ui.components.toTripStatus
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
@@ -104,9 +109,9 @@ fun PlanSheet(modifier: Modifier = Modifier, bottomPadding: Boolean = true, cont
 }
 
 @Composable
-fun SheetTitle(title: String, subtitle: String? = null, trailing: @Composable () -> Unit = {}) {
+fun SheetTitle(title: String, subtitle: String? = null, titleModifier: Modifier = Modifier, trailing: @Composable () -> Unit = {}) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(1f).then(titleModifier)) {
             Text(title, Modifier.semantics { heading() }, style = KonstanzType.Title.copy(letterSpacing = (-0.01).em), color = Ink)
             if (subtitle != null) Text(subtitle, style = KonstanzType.Caption.copy(fontWeight = FontWeight.Bold), color = Ink3)
         }
@@ -391,18 +396,45 @@ fun ResultsSheet(
     onSelect: (Int) -> Unit,
     onOptions: () -> Unit,
     modifier: Modifier = Modifier,
+    /** Shared with the map screen so dragging the map also minimizes this sheet. */
+    dragState: DragSheetState = rememberDragSheetState(),
 ) {
     // Keep the upper half of the map (and the route) visible; the list scrolls (artboard 18).
     val maxHeight = com.example.konstanz.ui.theme.windowHeight() * 0.56f
-    PlanSheet(modifier.heightIn(max = maxHeight)) {
-        SheetTitle(stringResource(R.string.routes), pluralStringResource(R.plurals.n_options_offline, journeys.size, journeys.size)) {
-            Row(
-                Modifier.height(40.dp).clip(Radius.Pill).background(Background).clickable(role = Role.Button, onClick = onOptions).padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
+    // Drag the title down to collapse to just "Routes · n options" (Google Maps style).
+    Column(
+        modifier
+            .dragSheetContainer(dragState)
+            .heightIn(max = maxHeight)
+            .fillMaxWidth()
+            .sheetShadow(Radius.Sheet)
+            .clip(Radius.Sheet)
+            .background(White)
+            .navigationBarsPadding()
+            .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
+    ) {
+        Column(Modifier.dragSheetPeek(dragState)) {
+            Box(
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(width = 36.dp, height = 5.dp)
+                    .background(SkeletonBar, Radius.Pill)
+                    .dragSheetHandle(dragState),
+            )
+            Spacer(Modifier.height(15.dp))
+            SheetTitle(
+                stringResource(R.string.routes),
+                pluralStringResource(R.plurals.n_options_offline, journeys.size, journeys.size),
+                titleModifier = Modifier.dragSheetHandle(dragState),
             ) {
-                Text(preference.label, style = KonstanzType.BodySmall.copy(fontWeight = FontWeight.Bold), color = Ink)
-                KonstanzIcon(KtIcons.ChevronDown, contentDescription = null, size = 18.dp, tint = Ink)
+                Row(
+                    Modifier.height(40.dp).clip(Radius.Pill).background(Background).clickable(role = Role.Button, onClick = onOptions).padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Text(preference.label, style = KonstanzType.BodySmall.copy(fontWeight = FontWeight.Bold), color = Ink)
+                    KonstanzIcon(KtIcons.ChevronDown, contentDescription = null, size = 18.dp, tint = Ink)
+                }
             }
         }
         Column(
