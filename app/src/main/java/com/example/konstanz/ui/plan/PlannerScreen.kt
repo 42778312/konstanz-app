@@ -138,7 +138,8 @@ fun PlannerRoute(
             delay((350 - (System.currentTimeMillis() - started)).coerceAtLeast(0))
             journeys = result
             selected = 0
-            step = if (result.isEmpty()) PlanStep.NoRoute else PlanStep.Results
+            // Straight to the best route on the map; the other options are a swipe away on its cards.
+            step = if (result.isEmpty()) PlanStep.NoRoute else PlanStep.RouteMap
         }
     }
 
@@ -163,7 +164,6 @@ fun PlannerRoute(
             prefsOpen -> prefsOpen = false
             step == PlanStep.Walk -> step = PlanStep.Details
             step == PlanStep.Details -> step = PlanStep.RouteMap
-            step == PlanStep.RouteMap -> step = PlanStep.Results
             step == PlanStep.Input -> actions.onClose()
             else -> step = PlanStep.Input
         }
@@ -340,9 +340,7 @@ private fun PlannerScreen(
                     subtitle = if (step == PlanStep.RouteMap && journey != null) {
                         stringResource(R.string.route_x_of_y, selected + 1, journeys.size, journey.summary().substringBefore(" ·"))
                     } else options.summary(),
-                    onBack = {
-                        onStep(if (step == PlanStep.RouteMap) PlanStep.Results else PlanStep.Input)
-                    },
+                    onBack = { onStep(PlanStep.Input) },
                     onEdit = { onStep(PlanStep.Input) },
                     onOptions = { onPrefs(true) },
                 )
