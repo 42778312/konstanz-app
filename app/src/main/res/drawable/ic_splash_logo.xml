@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 288 dp is what the Android 12+ splash screen API asks for (lint's 200 dp limit doesn't apply). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="VectorRaster"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+    <!-- 104dp white tile, radius 31, centred -->
+    <path
+        android:fillColor="@color/kt_white"
+        android:pathData="M123,92h42a31,31 0,0 1,31 31v42a31,31 0,0 1,-31 31h-42a31,31 0,0 1,-31 -31v-42a31,31 0,0 1,31 -31z" />
+    <!-- 56dp mark, centred in the tile -->
+    <group
+        android:translateX="116"
+        android:translateY="116">
+        <path
+            android:pathData="M14,42C14,30 42,34 42,20"
+            android:strokeColor="@color/kt_primary"
+            android:strokeWidth="6"
+            android:strokeLineCap="round" />
+        <path
+            android:fillColor="@color/kt_white"
+            android:pathData="M7,42a7,7 0,1 0,14 0a7,7 0,1 0,-14 0z"
+            android:strokeColor="@color/kt_primary"
+            android:strokeWidth="4.5" />
+        <group
+            android:pivotX="42"
+            android:pivotY="14"
+            android:rotation="45">
+            <path
+                android:fillColor="@color/kt_primary"
+                android:pathData="M37.5,7h9a2.5,2.5 0,0 1,2.5 2.5v9a2.5,2.5 0,0 1,-2.5 2.5h-9a2.5,2.5 0,0 1,-2.5 -2.5v-9a2.5,2.5 0,0 1,2.5 -2.5z" />
+        </group>
+    </group>
+</vector>

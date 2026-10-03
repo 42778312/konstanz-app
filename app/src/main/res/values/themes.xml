@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Konstanz" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/kt_primary</item>
+    </style>
+
+    <!-- System splash (Android 12+ API, backported by core-splashscreen): brand red + logo tile,
+         so it hands over seamlessly to the Compose splash (artboard 01). -->
+    <style name="Theme.Konstanz.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/kt_primary</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.Konstanz</item>
+    </style>
+</resources>

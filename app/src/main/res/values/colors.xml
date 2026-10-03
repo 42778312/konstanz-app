@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mirrors ui/theme/Color.kt for XML-only places (system splash, launcher icon). -->
+    <color name="kt_primary">#FFD4003B</color>
+    <color name="kt_white">#FFFFFFFF</color>
+</resources>

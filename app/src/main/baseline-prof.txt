@@ -1,0 +1,14 @@
+# Compiled ahead of time at install (via androidx.profileinstaller), so the map pans and zooms smoothly from
+# the first launch instead of running interpreted until the JIT has warmed up.
+HSPLcom/example/konstanz/ui/map/**->**(**)**
+HSPLcom/example/konstanz/ui/plan/**->**(**)**
+HSPLcom/example/konstanz/ui/components/**->**(**)**
+HSPLcom/example/konstanz/ui/icons/**->**(**)**
+HSPLcom/example/konstanz/ui/theme/**->**(**)**
+HSPLcom/example/konstanz/ui/main/**->**(**)**
+HSPLcom/example/konstanz/data/transit/**->**(**)**
+HSPLcom/example/konstanz/data/search/**->**(**)**
+HSPLcom/example/konstanz/data/walk/**->**(**)**
+Lcom/example/konstanz/ui/map/**;
+Lcom/example/konstanz/ui/plan/**;
+Lcom/example/konstanz/ui/components/**;

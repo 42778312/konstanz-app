@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 11 and older: same as data_extraction_rules.xml — only the user's own data. -->
+<full-backup-content>
+    <include domain="database" path="user.db" />
+    <include domain="database" path="user.db-wal" />
+    <include domain="database" path="user.db-shm" />
+    <include domain="file" path="datastore/settings.preferences_pb" />
+    <include domain="sharedpref" path="transit.xml" />
+</full-backup-content>
