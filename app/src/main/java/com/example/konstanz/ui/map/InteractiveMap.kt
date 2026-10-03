@@ -203,7 +203,8 @@ fun InteractiveMap(
         // Read in layout / draw only (see MapOverlayScope): panning doesn't recompose the map's content.
         val projection = remember(camera, w, h) { { camera.projection(w, h) } }
         val zoom = remember(camera) { { camera.zoom } }
-        val stopLayer = remember { NativeStopLayer() }
+        // The activity's shared map (kept loaded between screens), or one of its own outside the app's root.
+        val holder = if (realMap) LocalMapHolder.current ?: rememberOwnedMapHolder() else null
 
         Box(
             Modifier
@@ -233,9 +234,9 @@ fun InteractiveMap(
                     )
                 }
         ) {
-            if (realMap) RealBaseMap(projection, w, h, Modifier.fillMaxSize(), stopLayer)
+            if (holder != null) RealBaseMap(projection, w, h, holder, Modifier.fillMaxSize())
             else scene?.let { s -> Canvas(Modifier.fillMaxSize()) { drawScene(s, projection()) } }
-            Box(Modifier.fillMaxSize()) { MapOverlayScope(projection, this, zoom, if (realMap) stopLayer else null).overlays() }
+            Box(Modifier.fillMaxSize()) { MapOverlayScope(projection, this, zoom, holder?.stops).overlays() }
         }
     }
 }

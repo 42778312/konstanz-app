@@ -68,8 +68,23 @@ class NativeStopLayer {
     private var byId: Map<String, Stop> = emptyMap()
     private var hiddenId: String? = null
 
-    /** Stops to show; [hidden] = the selected stop, drawn separately on top. */
-    fun show(stops: List<Stop>, hidden: String?) {
+    /** Who set the stops last: the map is shared by screens, and a closing screen must not clear the next one's. */
+    private var shownBy: Any? = null
+
+    /** Stops to show for the screen [by]; [hidden] = the selected stop, drawn separately on top. */
+    fun show(by: Any, stops: List<Stop>, hidden: String?) {
+        shownBy = by
+        show(stops, hidden)
+    }
+
+    /** Takes away [by]'s stops, unless another screen has shown its own since. */
+    fun clear(by: Any) {
+        if (shownBy !== by) return
+        shownBy = null
+        show(emptyList(), null)
+    }
+
+    private fun show(stops: List<Stop>, hidden: String?) {
         val dataChanged = stops != this.stops
         this.stops = stops
         byId = stops.associateBy { it.id }

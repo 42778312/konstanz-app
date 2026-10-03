@@ -143,8 +143,9 @@ private fun NativeStops(
     onStopClick: (Stop) -> Unit,
     onClusterClick: (center: MapPoint, count: Int) -> Unit,
 ) {
-    SideEffect { native.show(stops, hiddenStopId) }
-    DisposableEffect(native) { onDispose { native.show(emptyList(), null) } }
+    val owner = remember { Any() }
+    SideEffect { native.show(owner, stops, hiddenStopId) }
+    DisposableEffect(native) { onDispose { native.clear(owner) } }
     val stopClick by rememberUpdatedState(onStopClick)
     val clusterClick by rememberUpdatedState(onClusterClick)
     val stopLabel = stringResource(R.string.open_stop)
