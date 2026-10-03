@@ -48,6 +48,8 @@ import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.map.markerShadow
+import com.example.konstanz.ui.theme.Inverse
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
@@ -106,7 +108,7 @@ fun WalkSheet(
     val steps = leg.steps
     val list = rememberLazyListState()
     LaunchedEffect(selected) { if (selected >= 0) list.animateScrollToItem(selected) }
-    Column(modifier.fillMaxWidth().height(height).sheetShadow(shape).clip(shape).background(White)) {
+    Column(modifier.fillMaxWidth().height(height).sheetShadow(shape).clip(shape).background(Surface)) {
         Box(Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally).size(width = 36.dp, height = 5.dp)
             .background(com.example.konstanz.ui.theme.SkeletonBar, com.example.konstanz.ui.theme.Radius.Pill))
         Row(
@@ -165,7 +167,7 @@ private fun StepRow(step: WalkStep, before: Int?, selected: Boolean, last: Boole
     Row(
         Modifier
             .fillMaxWidth()
-            .background(if (selected) Location.copy(alpha = 0.08f) else White)
+            .background(if (selected) Location.copy(alpha = 0.08f) else Surface)
             .clickable(role = Role.Button, onClickLabel = stringResource(R.string.show_on_map), onClick = onClick)
             .padding(start = 20.dp, end = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -197,7 +199,7 @@ fun StepBanner(steps: List<WalkStep>, index: Int, onIndex: (Int) -> Unit, modifi
     val step = steps[index]
     val shape = RoundedCornerShape(20.dp)
     Row(
-        modifier.fillMaxWidth().floatingShadow(shape).background(Ink, shape).padding(start = 14.dp, end = 6.dp, top = 12.dp, bottom = 12.dp),
+        modifier.fillMaxWidth().floatingShadow(shape).background(Inverse, shape).padding(start = 14.dp, end = 6.dp, top = 12.dp, bottom = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {

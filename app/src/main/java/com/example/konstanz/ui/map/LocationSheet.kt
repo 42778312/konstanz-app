@@ -43,6 +43,7 @@ import com.example.konstanz.ui.components.dragSheetPeek
 import com.example.konstanz.ui.components.rememberDragSheetState
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
 import com.example.konstanz.ui.theme.Ink3
@@ -79,7 +80,7 @@ fun LocationSheet(
             .fillMaxWidth()
             .sheetShadow(Radius.Sheet)
             .clip(Radius.Sheet)
-            .background(White)
+            .background(Surface)
             .navigationBarsPadding()
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
     ) {

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.KonstanzTheme
@@ -46,17 +48,25 @@ import com.example.konstanz.ui.theme.floatingShadow
 import com.example.konstanz.ui.theme.outlined
 
 /** The six button looks from the design system's "Buttons" row. */
-enum class ButtonVariant(val container: Color, val pressed: Color, val content: Color, val outlined: Boolean = false) {
+enum class ButtonVariant(
+    private val colors: () -> Triple<Color, Color, Color>,
+    val outlined: Boolean = false,
+) {
     /** "Find routes" — one per screen. */
-    Primary(com.example.konstanz.ui.theme.Primary, PrimaryPressed, White),
+    Primary({ Triple(com.example.konstanz.ui.theme.Primary, PrimaryPressed, White) }),
     /** "Route from here" — secondary action next to a primary one. */
-    Tonal(PrimaryTint, Color(0xFFF8D5DF), OnPrimaryTint),
+    Tonal({ Triple(PrimaryTint, lerp(PrimaryTint, com.example.konstanz.ui.theme.Primary, 0.12f), OnPrimaryTint) }),
     /** "All departures" — neutral action on white surfaces. */
-    Neutral(Background, Line, Ink),
+    Neutral({ Triple(Background, Line, Ink) }),
     /** "Add a place" — white with outline, on grey surfaces. */
-    Outline(White, Background, Ink, outlined = true),
+    Outline({ Triple(Surface, Background, Ink) }, outlined = true),
     /** "Clear all" — text only, destructive-ish. */
-    Text(Color.Transparent, PrimaryTint, OnPrimaryTint),
+    Text({ Triple(Color.Transparent, PrimaryTint, OnPrimaryTint) });
+
+    // Read from the active palette each time, so the variants follow light/dark mode.
+    val container: Color get() = colors().first
+    val pressed: Color get() = colors().second
+    val content: Color get() = colors().third
 }
 
 /** 52 dp button, 14 dp radius, Figtree 700/17. Disabled = 40 % opacity, as in "Update data". */
@@ -111,7 +121,7 @@ fun FloatingIconButton(
             .size(Spacing.TouchTarget)
             .floatingShadow(Radius.Button)
             .clip(Radius.Button)
-            .background(White)
+            .background(Surface)
             .clickable(role = Role.Button, onClickLabel = contentDescription, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
@@ -133,7 +143,7 @@ fun FloatingRoundButton(
             .size(56.dp)
             .floatingShadow(CircleShape)
             .clip(CircleShape)
-            .background(White)
+            .background(Surface)
             .clickable(role = Role.Button, onClickLabel = contentDescription, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {

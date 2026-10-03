@@ -66,6 +66,7 @@ import com.example.konstanz.ui.components.SwitchRow
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.offline.shownHealth
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Delayed
 import com.example.konstanz.ui.theme.DelayedTint
@@ -215,7 +216,7 @@ private fun Header(onClose: () -> Unit) {
             Modifier
                 .size(44.dp)
                 .clip(CircleShape)
-                .background(White)
+                .background(Surface)
                 .clickable(role = Role.Button, onClickLabel = stringResource(R.string.close_settings), onClick = onClose),
             contentAlignment = Alignment.Center,
         ) {

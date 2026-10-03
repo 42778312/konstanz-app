@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.konstanz.ui.components.KtButton
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.DotInactive
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
@@ -66,7 +67,7 @@ fun OnboardingPage(
     illustration: @Composable BoxScope.() -> Unit,
     actions: @Composable ColumnScope.() -> Unit,
 ) {
-    BoxWithConstraints(modifier.fillMaxSize().background(White).systemBarsPadding()) {
+    BoxWithConstraints(modifier.fillMaxSize().background(Surface).systemBarsPadding()) {
         val lowerMin = maxHeight * (354f / 784f)
         Column(Modifier.fillMaxSize()) {
             Box(

@@ -54,6 +54,7 @@ import com.example.konstanz.ui.components.TopBarTextAction
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
@@ -129,7 +130,7 @@ fun SavedScreen(
 ) {
     var editing by rememberSaveable { mutableStateOf(false) }
 
-    Column(modifier.fillMaxSize().background(White).statusBarsPadding()) {
+    Column(modifier.fillMaxSize().background(Surface).statusBarsPadding()) {
         Row(
             Modifier.fillMaxWidth().height(60.dp).padding(start = 20.dp, end = 12.dp),
             verticalAlignment = Alignment.CenterVertically,

@@ -36,6 +36,7 @@ import com.example.konstanz.ui.offline.shownHealth
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Inverse
 import com.example.konstanz.ui.theme.Delayed
 import com.example.konstanz.ui.theme.DelayedTint
 import com.example.konstanz.ui.theme.Ink
@@ -69,7 +70,7 @@ fun OfflineBanner(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
         modifier
             .fillMaxWidth()
             .floatingShadow(RoundedCornerShape(16.dp))
-            .background(Ink, RoundedCornerShape(16.dp))
+            .background(Inverse, RoundedCornerShape(16.dp))
             .padding(start = 16.dp, end = 14.dp, top = 14.dp, bottom = 14.dp)
             .semantics { liveRegion = LiveRegionMode.Polite },
         horizontalArrangement = Arrangement.spacedBy(12.dp),

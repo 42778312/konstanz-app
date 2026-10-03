@@ -61,6 +61,7 @@ import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.map.MapIllustration
 import com.example.konstanz.ui.map.SelectedStopMarker
 import com.example.konstanz.ui.map.StopMarkersLayer
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Detour
 import com.example.konstanz.ui.theme.DetourTint
@@ -128,7 +129,7 @@ fun StopDetailsScreen(
     actions: StopDetailsActions,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier.fillMaxSize().background(White)) {
+    Column(modifier.fillMaxSize().background(Surface)) {
         KtTopBar(
             title = stop.name,
             subtitle = stopSubtitle(stop, walkMinutes = null),
@@ -274,7 +275,7 @@ private fun LastUpdatedCard(realtime: RealtimeInfo?, onRefresh: () -> Unit) {
             Modifier
                 .height(40.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .background(White)
+                .background(Surface)
                 .clickable(role = Role.Button, enabled = realtime != null, onClick = onRefresh)
                 .padding(horizontal = 14.dp),
             contentAlignment = Alignment.Center,

@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
+import com.example.konstanz.ui.theme.Inverse
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.KonstanzType
 import com.example.konstanz.ui.theme.Radius
@@ -41,7 +43,7 @@ fun KtChip(
             .height(40.dp)
             .then(if (selected) Modifier else Modifier.outlined(Radius.Pill))
             .clip(Radius.Pill)
-            .background(if (selected) Ink else White)
+            .background(if (selected) Inverse else Surface)
             .selectable(selected = selected, role = Role.Button, onClick = onClick)
             .padding(horizontal = 14.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),

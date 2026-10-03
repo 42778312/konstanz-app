@@ -40,6 +40,8 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
+import com.example.konstanz.ui.theme.Inverse
 import com.example.konstanz.ui.theme.Figtree
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Location
@@ -104,7 +106,7 @@ fun DestinationMarker(modifier: Modifier = Modifier) {
             .size(20.dp)
             .rotate(45f)
             .markerShadow(shape, radius = 5.dp, alpha = 0.35f)
-            .background(Ink, shape)
+            .background(Inverse, shape)
             .border(3.dp, White, shape)
     )
 }
@@ -162,7 +164,7 @@ fun LocationPulse(modifier: Modifier = Modifier, diameter: Dp = 220.dp) {
     )
 }
 
-private val labelHalo = TextShadow(color = White, offset = Offset.Zero, blurRadius = 6f)
+private val labelHalo get() = TextShadow(color = Surface, offset = Offset.Zero, blurRadius = 6f)
 
 /** District name, e.g. ALTSTADT. */
 @Composable

@@ -103,30 +103,34 @@ fun LineBadge(line: String, modifier: Modifier = Modifier, size: BadgeSize = Bad
 sealed class TripStatus(
     private val text: () -> String,
     val icon: KtIcon,
-    val content: Color,
-    /** null = plain inline text without a pill. */
-    val container: Color?,
+    private val contentColor: () -> Color,
+    private val containerColor: () -> Color?,
 ) {
+    // Read from the active palette each time, so the states follow light/dark mode.
+    val content: Color get() = contentColor()
+    /** null = plain inline text without a pill. */
+    val container: Color? get() = containerColor()
+
     /** The word shown, in the phone's language. */
     val label: String get() = text()
 
-    data object OnTime : TripStatus({ Texts.get(R.string.status_on_time) }, KtIcons.Live, LiveColor, LiveTint)
-    data object Live : TripStatus({ Texts.get(R.string.status_live) }, KtIcons.Live, LiveColor, LiveTint)
-    data class Delay(val minutes: Int) : TripStatus({ Texts.get(R.string.status_delay, minutes) }, KtIcons.Clock, Delayed, DelayedTint)
-    data object Cancelled : TripStatus({ Texts.get(R.string.status_cancelled) }, KtIcons.Cancel, White, CancelledColor)
-    data object Detour : TripStatus({ Texts.get(R.string.status_detour) }, KtIcons.Detour, DetourColor, DetourTint)
+    data object OnTime : TripStatus({ Texts.get(R.string.status_on_time) }, KtIcons.Live, { LiveColor }, { LiveTint })
+    data object Live : TripStatus({ Texts.get(R.string.status_live) }, KtIcons.Live, { LiveColor }, { LiveTint })
+    data class Delay(val minutes: Int) : TripStatus({ Texts.get(R.string.status_delay, minutes) }, KtIcons.Clock, { Delayed }, { DelayedTint })
+    data object Cancelled : TripStatus({ Texts.get(R.string.status_cancelled) }, KtIcons.Cancel, { White }, { CancelledColor })
+    data object Detour : TripStatus({ Texts.get(R.string.status_detour) }, KtIcons.Detour, { DetourColor }, { DetourTint })
     /** Realtime 2–15 min old. With [minutesAgo]: "Last known · 6 min ago". */
     data class LastKnown(val minutesAgo: Int? = null) : TripStatus(
         { if (minutesAgo == null) Texts.get(R.string.status_last_known) else Texts.get(R.string.status_last_known_ago, minutesAgo) },
-        KtIcons.History, Ink2, Background,
+        KtIcons.History, { Ink2 }, { Background },
     )
     /** Realtime over 15 min old — treated like scheduled. With [minutesOld]: "Stale · 18 min old". */
     data class Stale(val minutesOld: Int? = null) : TripStatus(
         { if (minutesOld == null) Texts.get(R.string.status_stale) else Texts.get(R.string.status_stale_old, minutesOld) },
-        KtIcons.Alert, Delayed, null,
+        KtIcons.Alert, { Delayed }, { null },
     )
-    data object Scheduled : TripStatus({ Texts.get(R.string.status_scheduled) }, KtIcons.Calendar, Ink3, null)
-    data object NoRealtime : TripStatus({ Texts.get(R.string.status_no_realtime) }, KtIcons.LiveOff, Ink3, null)
+    data object Scheduled : TripStatus({ Texts.get(R.string.status_scheduled) }, KtIcons.Calendar, { Ink3 }, { null })
+    data object NoRealtime : TripStatus({ Texts.get(R.string.status_no_realtime) }, KtIcons.LiveOff, { Ink3 }, { null })
 
     /** True when the realtime time may be shown in green. */
     val isLive: Boolean get() = this == OnTime || this == Live || this is Delay

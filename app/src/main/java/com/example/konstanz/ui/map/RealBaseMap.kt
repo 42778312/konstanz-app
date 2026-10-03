@@ -3,6 +3,7 @@ package com.example.konstanz.ui.map
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.MotionEvent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -57,8 +58,10 @@ internal fun RealBaseMap(
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     var map by remember { mutableStateOf<MapLibreMap?>(null) }
     val mapView = remember { drawOnlyMapView(context) { map = it } }
-    val styleJson by produceState<String?>(null) {
-        value = withContext(Dispatchers.IO) { runCatching { OfflineMapFiles.styleJson(context) }.getOrNull() }
+    // Reloaded on a light/dark switch; the stop layer is re-attached with the new palette.
+    val dark = isSystemInDarkTheme()
+    val styleJson by produceState<String?>(null, dark) {
+        value = withContext(Dispatchers.IO) { runCatching { OfflineMapFiles.styleJson(context, dark) }.getOrNull() }
     }
     LaunchedEffect(map, styleJson) {
         val m = map ?: return@LaunchedEffect
@@ -132,9 +135,43 @@ private object OfflineMapFiles {
     private const val TILES = "map/konstanz.pmtiles"
     private const val STYLE = "map/style.json"
 
-    fun styleJson(context: Context): String {
+    fun styleJson(context: Context, dark: Boolean): String {
         val copy = OfflineData.mapFile(context)
-        val style = context.assets.open(STYLE).bufferedReader().use { it.readText() }
-        return style.replace("pmtiles://asset://$TILES", "pmtiles://file://${copy.absolutePath}")
+        var style = context.assets.open(STYLE).bufferedReader().use { it.readText() }
+            .replace("pmtiles://asset://$TILES", "pmtiles://file://${copy.absolutePath}")
+        if (dark) {
+            // White halos and POI-dot rings sit on land, unlike white roads.
+            style = style.replace("\"text-halo-color\": \"#FFFFFF\"", "\"text-halo-color\": \"#1E2126\"")
+                .replace("\"circle-stroke-color\": \"#FFFFFF\"", "\"circle-stroke-color\": \"#1E2126\"")
+            DARK.forEach { (light, night) -> style = style.replace("\"$light\"", "\"$night\"", ignoreCase = true) }
+        }
+        return style
     }
+
+    /** The style's light colours → dark ones (same roles as DarkColors' map tokens). POI colours stay. */
+    private val DARK = mapOf(
+        "#A7D3F2" to "#1B3347", // water
+        "#93C4E8" to "#24425A", // shore
+        "#F6F4EF" to "#1E2126", // land
+        "#CFE8C0" to "#1F2E23", // landcover, parks
+        "#BFDDAB" to "#1C2B20", // forest
+        "#C2E3B2" to "#213325", // pitches
+        "#ECE9E4" to "#23262B", // industrial
+        "#F1E8D8" to "#26252A", // education
+        "#F7E0DE" to "#2B2326", // hospital
+        "#FBFAF7" to "#2A2D33", // pedestrian areas
+        "#EDEAE5" to "#2A2D33", // buildings
+        "#DEDAD3" to "#33363D", // building outlines
+        "#C9C2B6" to "#4A4E56", // paths, steps
+        "#D9D3C9" to "#26292E", // road casings
+        "#FFFFFF" to "#363A41", // roads
+        "#E5B64C" to "#6B5520", // highway casing
+        "#FFD873" to "#8A7230", // highway
+        "#B8B2A8" to "#5A5E66", // rail
+        "#B9B2C6" to "#6A6478", // border
+        "#5E6168" to "#B5B9C0", // street names
+        "#3F7FB5" to "#7FA9C6", // water names
+        "#D6EBF8" to "#1B3347", // water-name halo
+        "#7D828B" to "#9DA2AB", // district names
+    )
 }

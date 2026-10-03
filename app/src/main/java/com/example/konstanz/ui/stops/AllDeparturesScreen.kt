@@ -57,6 +57,7 @@ import com.example.konstanz.ui.components.TripStatus
 import com.example.konstanz.ui.components.toRow
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink3
@@ -116,7 +117,7 @@ fun AllDeparturesScreen(
     // Group by the hour of the timetable time: "14:00", "15:00" …
     val groups = departures.orEmpty().groupBy { it.scheduled.value / 60 }
 
-    Column(modifier.fillMaxSize().background(White)) {
+    Column(modifier.fillMaxSize().background(Surface)) {
         KtTopBar(stringResource(R.string.all_departures), onBack = onBack, subtitle = stopName, showDivider = true)
         LazyColumn(Modifier.fillMaxSize().navigationBarsPadding()) {
             item {
@@ -213,7 +214,7 @@ internal fun TimeDialog(now: Minutes, selected: Minutes, onDismiss: () -> Unit, 
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {},
-        containerColor = White,
+        containerColor = Surface,
         shape = Radius.Panel,
         title = { Text(stringResource(R.string.departures_from), style = KonstanzType.Title, color = Ink) },
         text = {

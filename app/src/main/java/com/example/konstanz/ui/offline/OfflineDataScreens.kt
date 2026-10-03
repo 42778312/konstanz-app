@@ -60,6 +60,7 @@ import com.example.konstanz.ui.components.SwitchRow
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Delayed
 import com.example.konstanz.ui.theme.DelayedTint
@@ -95,7 +96,7 @@ fun OfflineDataScreen(onBack: () -> Unit) {
     LaunchedEffect(Unit) { OfflineData.refresh(context) }
     val info = OfflineData.info
 
-    Column(Modifier.fillMaxSize().background(White)) {
+    Column(Modifier.fillMaxSize().background(Surface)) {
         KtTopBar(stringResource(R.string.offline_data), onBack = onBack, showDivider = true)
         Column(
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 20.dp, vertical = 16.dp),

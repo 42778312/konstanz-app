@@ -34,11 +34,10 @@ class MainActivity : ComponentActivity() {
                 .withEndAction { provider.remove() }
                 .start()
         }
-        // The app is always light (the design has no dark theme): keep dark bar icons even when the
-        // phone is in dark mode, or the clock and battery turn white on white screens.
+        // Bar icons follow the phone's light/dark mode, like the theme: dark on light screens, light on dark.
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
         )
         setContent {
             KonstanzTheme {

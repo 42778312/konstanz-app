@@ -91,6 +91,8 @@ import com.example.konstanz.ui.components.StatusPill
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Inverse
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink3
@@ -565,7 +567,7 @@ private fun SearchField(onClick: () -> Unit, modifier: Modifier = Modifier, text
             .height(56.dp)
             .floatingShadow(shape)
             .clip(shape)
-            .background(White)
+            .background(Surface)
             .clickable(role = Role.Button, onClickLabel = stringResource(R.string.search), onClick = onClick)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -591,7 +593,7 @@ private fun SquareFloatingButton(icon: KtIcon, label: String, onClick: () -> Uni
             .size(56.dp)
             .floatingShadow(shape)
             .clip(shape)
-            .background(White)
+            .background(Surface)
             .clickable(role = Role.Button, onClickLabel = label, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
@@ -608,7 +610,7 @@ private fun ZoomControls(onZoomIn: () -> Unit, onZoomOut: () -> Unit) {
             .width(48.dp)
             .floatingShadow(Radius.Button)
             .clip(Radius.Button)
-            .background(White),
+            .background(Surface),
     ) {
         ZoomButton(KtIcons.Plus, stringResource(R.string.zoom_in), onZoomIn)
         HorizontalDivider(Modifier.padding(horizontal = 10.dp), thickness = 1.dp, color = Line)
@@ -642,7 +644,7 @@ private fun HomeSheet(
             .fillMaxWidth()
             .sheetShadow(Radius.Sheet)
             .clip(Radius.Sheet)
-            .background(White)
+            .background(Surface)
             .padding(top = 8.dp, bottom = 10.dp),
     ) {
         Grabber()
@@ -678,7 +680,7 @@ private fun ColumnScope.Grabber() {
 private fun LocationUnavailableCard(onSelectOnMap: () -> Unit, onEnable: () -> Unit) {
     val shape = RoundedCornerShape(20.dp)
     Column(
-        Modifier.padding(top = 40.dp).fillMaxWidth().floatingShadow(shape).background(White, shape).padding(16.dp),
+        Modifier.padding(top = 40.dp).fillMaxWidth().floatingShadow(shape).background(Surface, shape).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.Top) {
@@ -707,7 +709,7 @@ private fun LocationUnavailableCard(onSelectOnMap: () -> Unit, onEnable: () -> U
 private fun TripSheet(trip: Journey, onClose: () -> Unit, modifier: Modifier = Modifier) {
     val ride = trip.rides.firstOrNull() ?: return
     Column(
-        modifier.fillMaxWidth().sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(White).navigationBarsPadding()
+        modifier.fillMaxWidth().sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(Surface).navigationBarsPadding()
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
     ) {
         Grabber()
@@ -734,7 +736,7 @@ private fun LayersSheet(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier.fillMaxWidth().sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(White).navigationBarsPadding()
+        modifier.fillMaxWidth().sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(Surface).navigationBarsPadding()
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 12.dp),
     ) {
         Grabber()
@@ -753,7 +755,7 @@ private fun LayersSheet(
 @Composable
 private fun RepairSheet(onRepair: () -> Unit, onMapOnly: () -> Unit, modifier: Modifier = Modifier) {
     Column(
-        modifier.fillMaxWidth().sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(White)
+        modifier.fillMaxWidth().sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(Surface)
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
     ) {
         Grabber()
@@ -776,7 +778,7 @@ private fun RepairSheet(onRepair: () -> Unit, onMapOnly: () -> Unit, modifier: M
 @Composable
 private fun HintPill(text: String) {
     Row(
-        Modifier.height(40.dp).background(Ink, Radius.Pill).padding(horizontal = 14.dp),
+        Modifier.height(40.dp).background(Inverse, Radius.Pill).padding(horizontal = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -799,7 +801,7 @@ private fun SelectedLocationSheet(
             .fillMaxWidth()
             .sheetShadow(Radius.Sheet)
             .clip(Radius.Sheet)
-            .background(White)
+            .background(Surface)
             .navigationBarsPadding()
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
     ) {

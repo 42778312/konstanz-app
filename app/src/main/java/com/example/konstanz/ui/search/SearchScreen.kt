@@ -80,6 +80,7 @@ import com.example.konstanz.ui.components.SectionLabel
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
@@ -211,7 +212,7 @@ private fun SearchScreen(
     val keyboard = LocalSoftwareKeyboardController.current
     LaunchedEffect(Unit) { focus.requestFocus() }
 
-    Column(Modifier.fillMaxSize().background(White).statusBarsPadding().imePadding()) {
+    Column(Modifier.fillMaxSize().background(Surface).statusBarsPadding().imePadding()) {
         // Back + search field.
         Row(
             Modifier.fillMaxWidth().padding(start = 8.dp, end = 16.dp, bottom = 12.dp),
@@ -286,7 +287,7 @@ private fun SearchField(query: String, onQueryChange: (String) -> Unit, onSearch
             .height(52.dp)
             .border(2.dp, Primary, shape)
             .clip(shape)
-            .background(White)
+            .background(Surface)
             .padding(start = 14.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -416,7 +417,7 @@ private fun SavedTile(place: SavedPlace, modifier: Modifier, onClick: () -> Unit
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Box(Modifier.size(44.dp).background(White, CircleShape), contentAlignment = Alignment.Center) {
+        Box(Modifier.size(44.dp).background(Surface, CircleShape), contentAlignment = Alignment.Center) {
             KonstanzIcon(savedIcon(place.kind), contentDescription = null, size = 22.dp, tint = Primary)
         }
         Text(place.displayName, style = KonstanzType.BodySmall.copy(fontSize = 14.sp, fontWeight = FontWeight.Bold), color = Ink, maxLines = 1, overflow = TextOverflow.Ellipsis)

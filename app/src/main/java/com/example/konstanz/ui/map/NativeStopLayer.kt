@@ -11,6 +11,7 @@ import com.example.konstanz.data.transit.MapPoint
 import com.example.konstanz.data.transit.Stop
 import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.theme.Ink
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Primary
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.Style
@@ -21,6 +22,9 @@ import org.maplibre.android.style.expressions.Expression.has
 import org.maplibre.android.style.expressions.Expression.literal
 import org.maplibre.android.style.expressions.Expression.neq
 import org.maplibre.android.style.expressions.Expression.not
+import org.maplibre.android.style.expressions.Expression.step
+import org.maplibre.android.style.expressions.Expression.stop
+import org.maplibre.android.style.expressions.Expression.zoom
 import org.maplibre.android.style.expressions.Expression.toString as exprToString
 import org.maplibre.android.style.layers.CircleLayer
 import org.maplibre.android.style.layers.PropertyFactory.circleColor
@@ -128,15 +132,16 @@ class NativeStopLayer {
         style.addLayer(CircleLayer(DOT, SOURCE).withFilter(single()).withProperties(
             circleColor(android.graphics.Color.WHITE), circleRadius(4f), circleStrokeColor(Primary.toArgb()), circleStrokeWidth(2.5f),
         ).apply { maxZoom = tileZoom; minZoom = minOf(dotZoom, tileZoom) - 3f })
+        // Tile and name are one symbol: as two layers, the names (placed first, being on top) blocked the tiles
+        // under them, so at the closest zooms the stops vanished. The name is optional and only from tileZoom + 1.3.
         style.addLayer(SymbolLayer(TILE, SOURCE).withFilter(single()).withProperties(
             // Like other maps: tiles that would cover each other show once; the rest appear when zooming in.
             iconImage(TILE_IMAGE), iconAllowOverlap(false), iconIgnorePlacement(false), iconPadding(1f),
-        ).apply { minZoom = tileZoom })
-        style.addLayer(SymbolLayer(NAME, SOURCE).withFilter(single()).withProperties(
-            textField(get("name")), textFont(arrayOf("Noto Sans Medium")), textSize(11.5f),
-            textColor(Ink.toArgb()), textHaloColor(android.graphics.Color.WHITE), textHaloWidth(1.6f),
+            textField(step(zoom(), literal(""), stop(tileZoom + 1.3f, get("name")))),
+            textFont(arrayOf("Noto Sans Medium")), textSize(11.5f),
+            textColor(Ink.toArgb()), textHaloColor(Surface.toArgb()), textHaloWidth(1.6f),
             textAnchor("top"), textOffset(arrayOf(0f, 1.35f)), textMaxWidth(8f), textOptional(true),
-        ).apply { minZoom = tileZoom + 1.3f })
+        ).apply { minZoom = tileZoom })
         applyHidden(style)
     }
 
@@ -151,7 +156,7 @@ class NativeStopLayer {
     }
 
     private fun applyHidden(style: Style) {
-        for (id in listOf(DOT, TILE, NAME)) (style.getLayer(id) as? CircleLayer)?.setFilter(single())
+        for (id in listOf(DOT, TILE)) (style.getLayer(id) as? CircleLayer)?.setFilter(single())
             ?: (style.getLayer(id) as? SymbolLayer)?.setFilter(single())
     }
 
@@ -207,6 +212,5 @@ class NativeStopLayer {
         private const val CLUSTER_COUNT = "kt-stop-cluster-count"
         private const val DOT = "kt-stop-dot"
         private const val TILE = "kt-stop-tile"
-        private const val NAME = "kt-stop-name"
     }
 }

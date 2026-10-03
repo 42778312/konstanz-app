@@ -67,6 +67,7 @@ import com.example.konstanz.ui.components.toTripStatus
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
@@ -98,7 +99,7 @@ fun PlanSheet(modifier: Modifier = Modifier, bottomPadding: Boolean = true, cont
             .fillMaxWidth()
             .sheetShadow(Radius.Sheet)
             .clip(Radius.Sheet)
-            .background(White)
+            .background(Surface)
             .then(if (bottomPadding) Modifier.navigationBarsPadding() else Modifier)
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = if (bottomPadding) 20.dp else 0.dp),
     ) {
@@ -137,7 +138,7 @@ fun PlanBar(from: String, to: String, subtitle: String, onBack: () -> Unit, onEd
             .height(64.dp)
             .floatingShadow(shape)
             .clip(shape)
-            .background(White)
+            .background(Surface)
             .padding(start = 4.dp, end = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -285,7 +286,7 @@ private fun Segmented(selected: TimeMode, onSelect: (TimeMode) -> Unit) {
                     .height(40.dp)
                     .then(if (on) Modifier.dropShadow(RoundedCornerShape(10.dp), Shadow(radius = 3.dp, offset = DpOffset(0.dp, 1.dp), color = Ink, alpha = 0.15f)) else Modifier)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(if (on) White else Background)
+                    .background(if (on) Surface else Background)
                     .selectable(selected = on, role = Role.Tab, onClick = { onSelect(mode) }),
                 contentAlignment = Alignment.Center,
             ) {
@@ -409,7 +410,7 @@ fun ResultsSheet(
             .fillMaxWidth()
             .sheetShadow(Radius.Sheet)
             .clip(Radius.Sheet)
-            .background(White)
+            .background(Surface)
             .navigationBarsPadding()
             .padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 20.dp),
     ) {

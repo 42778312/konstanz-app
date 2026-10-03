@@ -20,6 +20,7 @@ import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.theme.Ink2
 import com.example.konstanz.ui.theme.Ink3
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.KonstanzType
 import com.example.konstanz.ui.theme.Radius
 import com.example.konstanz.ui.theme.White
@@ -44,7 +45,7 @@ fun StatusPill(
             .height(34.dp)
             .floatingShadow(Radius.Pill)
             .clip(Radius.Pill)
-            .background(White)
+            .background(Surface)
             .then(if (onClick != null) Modifier.clickable(role = Role.Button, onClick = onClick) else Modifier)
             .padding(start = 10.dp, end = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),

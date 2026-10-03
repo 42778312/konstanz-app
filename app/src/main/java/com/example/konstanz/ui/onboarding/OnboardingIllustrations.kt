@@ -47,6 +47,7 @@ import com.example.konstanz.ui.map.StartMarker
 import com.example.konstanz.ui.map.StopDotMarker
 import com.example.konstanz.ui.map.StopTileMarker
 import com.example.konstanz.ui.map.WaterLabel
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
 import com.example.konstanz.ui.theme.Ink3
@@ -111,7 +112,7 @@ fun OfflineMapsIllustration(modifier: Modifier = Modifier) {
         ) {
             val tile = RoundedCornerShape(28.dp)
             Box(
-                Modifier.size(88.dp).floatingShadow(tile).background(White, tile),
+                Modifier.size(88.dp).floatingShadow(tile).background(Surface, tile),
                 contentAlignment = Alignment.Center,
             ) {
                 KonstanzIcon(KtIcons.WifiOff, contentDescription = null, size = 44.dp, tint = Primary, strokeWidth = 2.2f)
@@ -132,7 +133,7 @@ fun TransportIllustration(modifier: Modifier = Modifier) {
                 .offset(y = 24.dp)
                 .fillMaxWidth()
                 .floatingShadow(card)
-                .background(White, card)
+                .background(Surface, card)
                 .padding(start = 18.dp, end = 18.dp, top = 16.dp, bottom = 8.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -210,7 +211,7 @@ private fun StoredItem(icon: KtIcon, title: String, subtitle: String) {
         Modifier
             .fillMaxWidth()
             .dropShadow(card, Shadow(radius = 2.dp, offset = DpOffset(0.dp, 1.dp), color = Ink, alpha = 0.06f))
-            .background(White, card)
+            .background(Surface, card)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(14.dp),

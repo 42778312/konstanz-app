@@ -48,6 +48,7 @@ import com.example.konstanz.data.SettingsRepository
 import com.example.konstanz.data.transit.Journey
 import com.example.konstanz.data.transit.Leg
 import com.example.konstanz.data.transit.Maneuver
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.windowHeight
 import com.example.konstanz.data.transit.MapPoint
 import com.example.konstanz.data.transit.pathPoints
@@ -407,7 +408,7 @@ private fun PlannerScreen(
 @Composable
 private fun BackCircle(label: String, onClick: () -> Unit) {
     Box(
-        Modifier.size(48.dp).floatingShadow(CircleShape).clip(CircleShape).background(White)
+        Modifier.size(48.dp).floatingShadow(CircleShape).clip(CircleShape).background(Surface)
             .clickable(role = Role.Button, onClickLabel = label, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) { KonstanzIcon(KtIcons.ChevronLeft, contentDescription = label, size = 22.dp, tint = Ink) }

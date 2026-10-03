@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
 import com.example.konstanz.ui.theme.Ink3
@@ -74,7 +75,7 @@ fun SettingsGroup(
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
         if (title != null) SectionLabel(title)
         Column(
-            Modifier.fillMaxWidth().clip(Radius.Group).background(White),
+            Modifier.fillMaxWidth().clip(Radius.Group).background(Surface),
             content = content,
         )
     }

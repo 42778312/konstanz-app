@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark mode: platform widgets and dialogs outside Compose follow the phone too. -->
+    <style name="Theme.Konstanz" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/kt_primary</item>
+    </style>
+</resources>

@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink3
 import com.example.konstanz.ui.theme.KonstanzType
@@ -48,7 +49,7 @@ fun KtTopBar(
     subtitle: String? = null,
     /** Shown before the title on the same line, e.g. a line badge. */
     titleLeading: (@Composable () -> Unit)? = null,
-    background: Color = White,
+    background: Color = Surface,
     showDivider: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
 ) {

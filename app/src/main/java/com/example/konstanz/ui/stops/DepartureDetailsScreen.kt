@@ -53,6 +53,7 @@ import com.example.konstanz.ui.components.TopBarIconButton
 import com.example.konstanz.ui.components.TripStatus
 import com.example.konstanz.ui.components.toTripStatus
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Figtree
 import com.example.konstanz.ui.theme.Ink
@@ -95,7 +96,7 @@ fun DepartureDetailsScreen(
     val hereIndex = trip.stops.indices.filter { trip.stops[it].stopId == hereStopId }
         .let { passes -> passes.firstOrNull { trip.stops[it].scheduled.value == hereAt } ?: passes.firstOrNull() } ?: 0
     val here = trip.stops[hereIndex]
-    Column(modifier.fillMaxSize().background(White)) {
+    Column(modifier.fillMaxSize().background(Surface)) {
         KtTopBar(
             title = stringResource(R.string.bus_x, trip.line),
             subtitle = stringResource(R.string.direction_x, trip.destination),

@@ -47,6 +47,8 @@ import com.example.konstanz.ui.components.KtTopBar
 import com.example.konstanz.ui.components.TopBarTextAction
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Inverse
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink3
@@ -85,7 +87,7 @@ fun RecentScreen(
     onClearAll: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier.fillMaxSize().background(White)) {
+    Column(modifier.fillMaxSize().background(Surface)) {
         KtTopBar(stringResource(R.string.recent_searches), onBack = onBack, showDivider = true) {
             if (items.isNotEmpty()) TopBarTextAction(stringResource(R.string.clear_all), onClearAll, color = OnPrimaryTint)
         }
@@ -121,7 +123,7 @@ private fun SwipeToRemove(onRemove: () -> Unit, content: @Composable () -> Unit)
         state = state,
         enableDismissFromStartToEnd = false,
         backgroundContent = {
-            Box(Modifier.fillMaxSize().background(Ink), contentAlignment = Alignment.CenterEnd) {
+            Box(Modifier.fillMaxSize().background(Inverse), contentAlignment = Alignment.CenterEnd) {
                 Column(
                     Modifier.width(96.dp).fillMaxHeight(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -139,7 +141,7 @@ private fun SwipeToRemove(onRemove: () -> Unit, content: @Composable () -> Unit)
 @Composable
 private fun RecentRow(item: RecentSearch, onClick: () -> Unit, onRemove: () -> Unit) {
     val removeLabel = stringResource(R.string.remove)
-    Column(Modifier.background(White)) {
+    Column(Modifier.background(Surface)) {
         Row(
             Modifier
                 .fillMaxWidth()

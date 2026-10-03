@@ -65,6 +65,7 @@ import com.example.konstanz.ui.components.rememberDragSheetState
 import com.example.konstanz.ui.components.toTripStatus
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink2
@@ -84,7 +85,7 @@ import com.example.konstanz.ui.theme.sheetShadow
 @Composable
 fun RouteLegend(modifier: Modifier = Modifier) {
     Row(
-        modifier.floatingShadow(RoundedCornerShape(12.dp)).background(White, RoundedCornerShape(12.dp)).padding(horizontal = 12.dp, vertical = 8.dp),
+        modifier.floatingShadow(RoundedCornerShape(12.dp)).background(Surface, RoundedCornerShape(12.dp)).padding(horizontal = 12.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(14.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -116,7 +117,7 @@ fun RouteMapCards(
         val j = journeys[page]
         val shape = RoundedCornerShape(24.dp)
         Column(
-            Modifier.fillMaxWidth().floatingShadow(shape).clip(shape).background(White)
+            Modifier.fillMaxWidth().floatingShadow(shape).clip(shape).background(Surface)
                 .clickable(role = Role.Button, onClickLabel = stringResource(R.string.show_route_details), onClick = onDetails).padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -174,7 +175,7 @@ fun DetailsSheet(
         modifier
             .dragSheetContainer(dragState)
             .fillMaxSize()
-            .sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(White),
+            .sheetShadow(Radius.Sheet).clip(Radius.Sheet).background(Surface),
     ) {
         Column(
             Modifier
@@ -353,7 +354,7 @@ private fun RideBlock(ride: Leg.Ride, realtimeAgo: Int?, onOpen: () -> Unit) {
                                 layout(0, p.height) { p.place(-26.dp.roundToPx(), 0) }
                             }
                             .size(8.dp)
-                            .background(White, androidx.compose.foundation.shape.CircleShape)
+                            .background(Surface, androidx.compose.foundation.shape.CircleShape)
                     ) {
                         Canvas(Modifier.fillMaxSize()) { drawCircle(Primary, size.minDimension / 2 - 1.dp.toPx(), style = Stroke(2.dp.toPx())) }
                     }

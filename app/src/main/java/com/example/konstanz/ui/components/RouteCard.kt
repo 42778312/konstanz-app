@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcons
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.Background
 import com.example.konstanz.ui.theme.Ink
 import com.example.konstanz.ui.theme.Ink3
@@ -87,7 +88,7 @@ private fun RouteRail(startIsMe: Boolean) {
         Box(
             Modifier
                 .size(14.dp)
-                .background(White, CircleShape)
+                .background(Surface, CircleShape)
                 .drawBehind { drawCircle(if (startIsMe) Location else Ink, radius = size.minDimension / 2f - 2.dp.toPx(), style = androidx.compose.ui.graphics.drawscope.Stroke(4.dp.toPx())) }
         )
         Box(

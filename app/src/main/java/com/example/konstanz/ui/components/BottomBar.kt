@@ -26,6 +26,7 @@ import com.example.konstanz.ui.icons.KonstanzIcon
 import com.example.konstanz.ui.icons.KtIcon
 import com.example.konstanz.ui.icons.KtIcons
 import com.example.konstanz.ui.theme.Ink3
+import com.example.konstanz.ui.theme.Surface
 import com.example.konstanz.ui.theme.KonstanzTheme
 import com.example.konstanz.ui.theme.KonstanzType
 import com.example.konstanz.ui.theme.Line
@@ -47,7 +48,7 @@ fun KonstanzBottomBar(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier.fillMaxWidth().background(White).navigationBarsPadding()) {
+    Column(modifier.fillMaxWidth().background(Surface).navigationBarsPadding()) {
         HorizontalDivider(thickness = 1.dp, color = Line)
         Row(Modifier.fillMaxWidth().padding(horizontal = 12.dp).selectableGroup()) {
             items.forEachIndexed { index, item ->
