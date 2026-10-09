@@ -57,8 +57,9 @@ explorer → Downloads, so crash reports are readable).
 
 ## 4 · Host the privacy policy
 
-Play needs a public URL. Simplest: push the repo to GitHub, Settings → Pages → Branch `main`, folder `/docs`.
-The URL is then `https://<user>.github.io/<repo>/privacy-policy.html`.
+Play needs a public URL. The repo is public on GitHub: Settings → Pages → Source "Deploy from a branch" →
+Branch `main` (once merged) or `map-keep-alive`, folder `/docs` → Save. After about a minute the policy is at
+`https://42778312.github.io/konstanz-app/privacy-policy.html`.
 
 ## 5 · Play Console
 
@@ -76,7 +77,8 @@ The URL is then `https://<user>.github.io/<repo>/privacy-policy.html`.
    - Data safety: **No data collected, no data shared** (on-device processing of location is not "collection"
      because it never leaves the phone). Encrypted in transit: not applicable. Deletion: not applicable.
    - Government app: No. Financial features: None. Health: No. News: No.
-4. **Store listing** (Grow → Store presence → Main store listing):
+4. **Store listing** (Grow → Store presence → Main store listing). Every text and answer, ready to paste:
+   **`branding/play-store/listing.md`**.
    - App name: `Konstant: Bus & Wege Konstanz` (EN: `Konstant: Konstanz Bus & Walk`)
    - Short + full description: see the brand book's "Store listing" section (DE + EN).
    - Icon `branding/play-store/icon-512.png`, feature graphic `feature-graphic.png`, phone screenshots
