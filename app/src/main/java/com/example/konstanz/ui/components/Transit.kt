@@ -1,6 +1,8 @@
 package com.example.konstanz.ui.components
 
 import com.example.konstanz.R
+import com.example.konstanz.ui.theme.OnBrand
+import com.example.konstanz.ui.theme.Brand
 import com.example.konstanz.data.Texts
 
 import androidx.compose.ui.res.stringResource
@@ -70,20 +72,21 @@ enum class BadgeSize(val minWidth: Dp, val height: Dp, val radius: Dp, val fontS
     S(28.dp, 22.dp, 6.dp, 13.sp),
 }
 
-/** Red tile with the line number, e.g. "12". */
+/** Tile with the line number, e.g. "12", in the line's official colour ([LineColors]), else brand mint. */
 @Composable
 fun LineBadge(line: String, modifier: Modifier = Modifier, size: BadgeSize = BadgeSize.M) {
+    val official = LineColors.of(line)
     Box(
         modifier = modifier
             .defaultMinSize(minWidth = size.minWidth)
             .height(size.height)
-            .background(Primary, RoundedCornerShape(size.radius))
+            .background(official ?: Brand, RoundedCornerShape(size.radius))
             .padding(horizontal = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             line,
-            color = White,
+            color = official?.let(LineColors::contentOn) ?: OnBrand,
             style = TextStyle(
                 fontFamily = Figtree, fontWeight = FontWeight.ExtraBold, fontSize = size.fontSize,
                 letterSpacing = (-0.01).em, fontFeatureSettings = "tnum",

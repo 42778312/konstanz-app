@@ -112,7 +112,6 @@ fun PlannerRoute(
     var selected by rememberSaveable { mutableIntStateOf(0) }
     /** Index of the walk leg shown on the map ([PlanStep.Walk]). */
     var walkLeg by rememberSaveable { mutableIntStateOf(-1) }
-    var loadingStep by remember { mutableIntStateOf(0) }
 
     // Defaults from Settings → Routing.
     LaunchedEffect(Unit) {
@@ -124,7 +123,6 @@ fun PlannerRoute(
         val f = from ?: return
         val t = to ?: return
         step = PlanStep.Loading
-        loadingStep = 0
         scope.launch {
             val started = System.currentTimeMillis()
             val result = repo.journeys(
@@ -134,7 +132,6 @@ fun PlannerRoute(
                 dayOffset = if (options.timeMode == TimeMode.Now) 0 else options.dayOffset,
             )
             // The search takes well under a second: keep the loading state (artboard 33) just long enough not to flicker.
-            loadingStep = 3
             delay((350 - (System.currentTimeMillis() - started)).coerceAtLeast(0))
             journeys = result
             selected = 0
@@ -175,7 +172,7 @@ fun PlannerRoute(
 
     PlannerScreen(
         from = from, to = to, step = step, prefsOpen = prefsOpen, options = options,
-        journeys = journeys, selected = selected, loadingStep = loadingStep, walkLeg = walkLeg,
+        journeys = journeys, selected = selected, walkLeg = walkLeg,
         fromPoint = fromPoint, toPoint = toPoint, stops = stops, now = repo.now(),
         onSelect = { selected = it; step = PlanStep.RouteMap },
         onSelectedChange = { selected = it },
@@ -209,7 +206,6 @@ private fun PlannerScreen(
     options: PlanOptions,
     journeys: List<Journey>,
     selected: Int,
-    loadingStep: Int,
     walkLeg: Int,
     fromPoint: MapPoint?,
     toPoint: MapPoint?,
@@ -327,7 +323,7 @@ private fun PlannerScreen(
         // ---- Top ----
         Box(Modifier.fillMaxWidth().statusBarsPadding().padding(start = 16.dp, end = 16.dp, top = 12.dp)) {
             when (step) {
-                PlanStep.Input -> StatusPill(stringResource(R.string.offline))
+                PlanStep.Input -> Unit
                 PlanStep.Details -> BackCircle(stringResource(R.string.back_route_map)) { onStep(PlanStep.RouteMap) }
                 PlanStep.Walk -> Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                     BackCircle(stringResource(R.string.back_route_details)) { onStep(PlanStep.Details) }
@@ -355,7 +351,7 @@ private fun PlannerScreen(
                     onFrom = actions.onPickFrom, onTo = actions.onPickTo, onSwap = onSwap,
                     onOptions = { onPrefs(true) }, onFind = onSearch, onClose = actions.onClose,
                 )
-                PlanStep.Loading -> LoadingSheet(loadingStep)
+                PlanStep.Loading -> LoadingSheet()
                 PlanStep.Results -> ResultsSheet(journeys, selected, options.preference, onSelect = onSelect, onOptions = { onPrefs(true) }, dragState = sheetDragState)
                 PlanStep.NoRoute -> NoRouteSheet(
                     time = if (options.timeMode == TimeMode.Now) now else options.time,

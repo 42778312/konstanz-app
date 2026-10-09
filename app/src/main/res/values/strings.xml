@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Konstanz Transit</string>
+    <string name="app_name" translatable="false">Konstant</string>
     <string name="from_label">From</string>
     <string name="to_label">To</string>
     <string name="swap">Swap start and destination</string>
@@ -11,8 +11,6 @@
     <string name="timetable_ends_soon">Timetable ends soon</string>
     <string name="offline_saved_data">Offline · Using saved data</string>
     <string name="up_to_date">Up to date</string>
-    <string name="youre_offline">You\'re offline</string>
-    <string name="offline_body">Map, stops, timetables and route planning keep working. Live times return when you reconnect.</string>
     <string name="dismiss">Dismiss</string>
     <string name="realtime_unavailable">Realtime unavailable</string>
     <string name="showing_scheduled">Showing scheduled departures.</string>
@@ -98,7 +96,7 @@
     <string name="hour">Hour</string>
     <string name="minute">Minute</string>
     <string name="finding_routes">Finding routes…</string>
-    <string name="loading_walk">Calculating walking paths</string>
+    <string name="finding_routes_hint">Searching timetables offline</string>
     <string name="routes">Routes</string>
     <string name="time_from_stop">%1$s from %2$s</string>
     <string name="no_route">No route found</string>
@@ -109,8 +107,6 @@
     <string name="direct">Direct</string>
     <string name="summary_walking">%1$s · %2$d min walking</string>
     <string name="close">Close</string>
-    <string name="loading_departures">Checking departures</string>
-    <string name="loading_transfers">Calculating transfers</string>
     <plurals name="n_transfers">
         <item quantity="one">%1$d transfer</item>
         <item quantity="other">%1$d transfers</item>
@@ -119,7 +115,6 @@
         <item quantity="one">%1$d option · calculated offline</item>
         <item quantity="other">%1$d options · calculated offline</item>
     </plurals>
-    <string name="offline">Offline</string>
     <string name="back_route_map">Back to route map</string>
     <string name="back_route_details">Back to route details</string>
     <string name="route_x_of_y">Route %1$d of %2$d · %3$s</string>
@@ -239,15 +234,13 @@
     <string name="about">About</string>
     <string name="version">Version</string>
     <string name="timetable_x">timetable %1$s</string>
-    <string name="about_sources">About &amp; data sources</string>
-    <string name="licenses">Licenses</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="close_settings">Close settings</string>
     <string name="loc_while_using">While using</string>
     <string name="loc_approximate">Approximate</string>
     <string name="loc_off">Off</string>
-    <string name="splash_tagline">Offline public transport
-for Konstanz</string>
+    <string name="splash_tagline">The steady way to move
+through Konstanz</string>
     <string name="splash_loading">Loading local data · no internet needed</string>
     <string name="ob1_title">Explore Konstanz without needing an internet connection.</string>
     <string name="ob1_body">Offline maps, bus stops and route planning — all stored on your phone.</string>
@@ -256,7 +249,7 @@ for Konstanz</string>
     <string name="ob2_body">Explore Konstanz even when you don\'t have internet access. Pan, zoom and search just like online.</string>
     <string name="continue_">Continue</string>
     <string name="ob3_title">Find buses quickly</string>
-    <string name="ob3_body">See bus stops, schedules, departures and routes — with live times whenever they\'re available.</string>
+    <string name="ob3_body">See bus stops, schedules, departures and routes, all from the timetable on your phone.</string>
     <string name="ob4_body">Use your current location as the starting point for your journey. Location stays on your device.</string>
     <string name="not_now">Not now</string>
     <string name="ob5_title">Offline data is ready</string>
@@ -269,46 +262,35 @@ for Konstanz</string>
     <string name="bus_schedules">Bus schedules</string>
     <string name="bus_stops_sub">Every stop and platform</string>
     <string name="route_planning">Route planning</string>
-    <string name="updates_background">Updates download in the background when you\'re online.</string>
+    <string name="updates_background">New timetables come with app updates.</string>
     <string name="bus_schedules_sub">All lines and timetables</string>
     <string name="route_planning_sub">Works fully on-device</string>
     <string name="home">Home</string>
     <string name="work">Work</string>
     <string name="add_home">Add your home address</string>
     <string name="add_work">Add your work address</string>
-    <string name="version_line">Version %1$s · Timetable of %2$s</string>
     <string name="data_sources">Data sources</string>
-    <string name="map_places_streets">Map, places and streets</string>
     <string name="timetable">Timetable</string>
-    <string name="runs_on_device">Runs entirely on this device</string>
-    <string name="legal">Legal</string>
-    <string name="oss_licenses">Open-source licenses</string>
     <string name="send_feedback">Send feedback</string>
-    <string name="times_disclaimer">Times come from the published timetable and may differ from actual service. Times marked Scheduled are not live.</string>
-    <string name="fonts">Fonts</string>
-    <string name="map_data">Map data</string>
-    <string name="libraries">Libraries</string>
     <string name="pp_short">In short</string>
     <string name="pp_location">Your location</string>
     <string name="pp_saved">What is saved on your phone</string>
     <string name="pp_internet">Internet connection</string>
     <string name="pp_contact">Contact</string>
     <string name="pp_last_updated">Last updated: %1$s</string>
-    <string name="pp_short_body">Konstanz Transit works entirely on your phone. It has no account, no ads, no analytics and no tracking. The app does not have Android\'s internet permission, so it cannot send anything anywhere.</string>
+    <string name="pp_short_body">Konstant works entirely on your phone. It has no account, no ads, no analytics and no tracking. The app does not have Android\'s internet permission, so it cannot send anything anywhere.</string>
     <string name="pp_location_body">If you allow it, the app uses your location to show where you are on the map, to find stops near you and to plan routes from your position. Your location is used only on the phone and is never stored or shared. You can turn it off at any time in Settings → Location; everything else keeps working.</string>
     <string name="pp_saved_body">Your saved places, saved stops and recent searches, and your route preference. They stay on your phone and are deleted when you uninstall the app. If you use Android\'s backup, they can be included in your own backup; timetable and map data are not.</string>
-    <string name="pp_internet_body">The app only checks whether your phone is online, to tell you when it is working offline. It does not connect to any server: timetable, map and places are built into the app and arrive with app updates.</string>
+    <string name="pp_internet_body">The app never connects to the internet: timetable, map and places are built into the app and arrive with app updates.</string>
     <string name="pp_sources_body">Timetable: NVBW GmbH (Datenlizenz Deutschland 2.0). Map, places and streets: © OpenStreetMap contributors (ODbL). Bus stops: Stadt Konstanz. Using this data does not involve any of your personal data.</string>
     <string name="pp_contact_body">Questions about privacy: %1$s</string>
     <string name="valid_until">valid until %1$s</string>
-    <string name="live_times">Live times</string>
     <string name="updates_note">New timetables and maps come with app updates. Keep the app updated to always have the current timetable.</string>
     <string name="repairing">Repairing…</string>
     <string name="damaged_body">Some saved data can\'t be read. Repair makes fresh copies from the app; your saved places stay.</string>
     <string name="timetable_places">Timetable &amp; places</string>
     <string name="your_saved_places">Your saved places</string>
     <string name="storage_used">Storage used</string>
-    <string name="live_times_sub">Not available yet: times come from the timetable</string>
     <string name="repair_data">Repair data</string>
     <string name="expired_body">It ended on %1$s. Update the app to get the new timetable.</string>
     <string name="ready_offline">Ready for offline use</string>
@@ -421,4 +403,40 @@ for Konstanz</string>
     <string name="country_germany">Germany</string>
     <string name="country_switzerland">Switzerland</string>
     <string name="ob_enable_location">Enable Location</string>
+    <string name="seasonal_themes">Seasonal themes</string>
+    <string name="event_new_year">Happy New Year!</string>
+    <string name="event_fasnacht">Ho Narro! Happy Fasnacht</string>
+    <string name="event_valentine">Happy Valentine\'s Day</string>
+    <string name="event_easter">Happy Easter</string>
+    <string name="event_may_day">Happy May Day</string>
+    <string name="event_seenachtfest">Seenachtfest tonight · fireworks over the lake</string>
+    <string name="event_unity_day">Happy German Unity Day</string>
+    <string name="event_halloween">Happy Halloween</string>
+    <string name="event_st_martin">Happy St. Martin\'s Day</string>
+    <string name="event_advent">A cosy Advent season</string>
+    <string name="event_christmas">Merry Christmas</string>
+    <string name="event_name_new_year">New Year</string>
+    <string name="event_name_fasnacht">Fasnacht</string>
+    <string name="event_name_valentine">Valentine\'s Day</string>
+    <string name="event_name_easter">Easter</string>
+    <string name="event_name_may_day">May Day</string>
+    <string name="event_name_seenachtfest">Seenachtfest</string>
+    <string name="event_name_unity_day">German Unity Day</string>
+    <string name="event_name_halloween">Halloween</string>
+    <string name="event_name_st_martin">St. Martin</string>
+    <string name="event_name_advent">Advent</string>
+    <string name="event_name_christmas">Christmas</string>
+    <string name="season_winter">Winter on Lake Constance</string>
+    <string name="season_spring">Spring on Lake Constance</string>
+    <string name="season_summer">Summer on Lake Constance</string>
+    <string name="season_autumn">Autumn on Lake Constance</string>
+    <plurals name="event_countdown">
+        <item quantity="one">%1$s · tomorrow</item>
+        <item quantity="other">%1$s · in %2$d days</item>
+    </plurals>
+    <string name="themes_events_seasons">Events and seasons</string>
+    <string name="themes_events_only">Events only</string>
+    <string name="themes_off">Off</string>
+    <string name="day_from">%1$s, from %2$s</string>
+    <string name="show_departures">Show departures</string>
 </resources>

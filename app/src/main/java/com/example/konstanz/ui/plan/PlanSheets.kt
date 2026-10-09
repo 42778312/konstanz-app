@@ -5,6 +5,17 @@ import com.example.konstanz.data.Texts
 import com.example.konstanz.R
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
+import com.example.konstanz.ui.theme.SkeletonBase
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -76,16 +87,12 @@ import com.example.konstanz.ui.theme.Ink3
 import com.example.konstanz.ui.theme.Ink4
 import com.example.konstanz.ui.theme.KonstanzType
 import com.example.konstanz.ui.theme.Line
-import com.example.konstanz.ui.theme.Live
 import com.example.konstanz.ui.theme.Primary
 import com.example.konstanz.ui.theme.Radius
 import com.example.konstanz.ui.theme.SkeletonBar
-import com.example.konstanz.ui.theme.SwitchTrackOff
-import com.example.konstanz.ui.theme.White
 import com.example.konstanz.ui.theme.floatingShadow
 import com.example.konstanz.ui.theme.outlined
 import com.example.konstanz.ui.theme.sheetShadow
-import com.example.konstanz.ui.components.SmallSpinner
 
 /** Unselected radio ring (#B9BCC3 in artboard 17). */
 private val RadioOff = androidx.compose.ui.graphics.Color(0xFFB9BCC3)
@@ -335,56 +342,60 @@ private fun PrefRadio(title: String, hint: String, selected: Boolean, onSelect: 
 
 // ---------- 33 Finding routes ----------
 
-/** Progress of the (mock) route calculation: 0 walking paths, 1 departures, 2 transfers. */
+/** Shown while the routes are calculated: laid out like [ResultsSheet] so the results drop into place. */
 @Composable
-fun LoadingSheet(step: Int, modifier: Modifier = Modifier) {
+fun LoadingSheet(modifier: Modifier = Modifier) {
     PlanSheet(modifier) {
-        Text(stringResource(R.string.finding_routes), Modifier.padding(bottom = 14.dp), style = KonstanzType.Title, color = Ink)
-        Column(
-            Modifier.fillMaxWidth().background(Background, RoundedCornerShape(16.dp)).padding(horizontal = 16.dp, vertical = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            listOf(stringResource(R.string.loading_walk), stringResource(R.string.loading_departures), stringResource(R.string.loading_transfers)).forEachIndexed { i, label ->
-                ProgressStep(label, done = i < step, current = i == step)
-            }
-        }
+        SheetTitle(stringResource(R.string.finding_routes), stringResource(R.string.finding_routes_hint))
+        IndeterminateBar(Modifier.padding(top = 14.dp).fillMaxWidth())
         Column(Modifier.padding(top = 14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            repeat(2) { SkeletonCard() }
+            // Fade the placeholders out down the list, as if more were still coming.
+            listOf(1f, 0.6f, 0.3f).forEach { SkeletonCard(Modifier.alpha(it)) }
         }
     }
 }
 
+/** Thin bar with a primary segment sweeping across it. */
 @Composable
-private fun ProgressStep(label: String, done: Boolean, current: Boolean) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        when {
-            done -> Box(Modifier.size(22.dp).background(Live, CircleShape), contentAlignment = Alignment.Center) {
-                KonstanzIcon(KtIcons.Check, contentDescription = null, size = 14.dp, tint = White, strokeWidth = 3f)
-            }
-            current -> SmallSpinner(size = 22.dp)
-            else -> Box(Modifier.size(22.dp).border(2.dp, SwitchTrackOff, CircleShape))
-        }
-        Text(
-            label,
-            style = KonstanzType.RowTitle.copy(fontWeight = if (current) FontWeight.ExtraBold else FontWeight.SemiBold),
-            color = if (done || current) Ink else Ink3,
+private fun IndeterminateBar(modifier: Modifier = Modifier) {
+    val transition = rememberInfiniteTransition(label = "routes-progress")
+    val x by transition.animateFloat(
+        initialValue = -0.4f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(1100, easing = FastOutSlowInEasing), RepeatMode.Restart),
+        label = "routes-progress-x",
+    )
+    Box(modifier.height(3.dp).clip(Radius.Pill).background(SkeletonBase)) {
+        Box(
+            Modifier
+                .fillMaxWidth(0.4f)
+                .fillMaxHeight()
+                .graphicsLayer { translationX = x * size.width / 0.4f }
+                .background(Primary, Radius.Pill)
         )
     }
 }
 
+/** Placeholder with the shape of a [JourneyCard]: times, legs, first departure + status. */
 @Composable
-private fun SkeletonCard() {
+private fun SkeletonCard(modifier: Modifier = Modifier) {
     Column(
-        Modifier.fillMaxWidth().outlined(RoundedCornerShape(18.dp)).padding(16.dp),
+        modifier.fillMaxWidth().outlined(RoundedCornerShape(18.dp)).padding(horizontal = 16.dp, vertical = 14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Shimmer(Modifier.size(130.dp, 18.dp)); Shimmer(Modifier.size(56.dp, 18.dp))
+            Shimmer(Modifier.size(124.dp, 20.dp)); Shimmer(Modifier.size(48.dp, 20.dp))
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Shimmer(Modifier.size(40.dp, 22.dp)); Shimmer(Modifier.size(34.dp, 22.dp)); Shimmer(Modifier.size(40.dp, 22.dp))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Shimmer(Modifier.size(28.dp, 16.dp))
+            listOf(36.dp, 30.dp).forEach {
+                KonstanzIcon(KtIcons.ChevronRight, contentDescription = null, size = 14.dp, tint = SkeletonBar, strokeWidth = 2.4f)
+                Shimmer(Modifier.size(it, 22.dp), Radius.Badge)
+            }
         }
-        Shimmer(Modifier.fillMaxWidth(0.7f).height(12.dp))
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Shimmer(Modifier.fillMaxWidth(0.5f).height(14.dp)); Shimmer(Modifier.size(64.dp, 22.dp))
+        }
     }
 }
 

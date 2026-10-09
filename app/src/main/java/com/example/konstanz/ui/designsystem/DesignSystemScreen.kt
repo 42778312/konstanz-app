@@ -70,7 +70,7 @@ fun DesignSystemScreen(modifier: Modifier = Modifier) {
     ) {
         item {
             Column(verticalArrangement = Arrangement.spacedBy(Spacing.xs)) {
-                Text("Konstanz Transit", style = t.Display, color = c.ink)
+                Text("Konstant", style = t.Display, color = c.ink)
                 Text("Design system · map-first, offline-first.", style = t.Body, color = c.ink2)
             }
         }

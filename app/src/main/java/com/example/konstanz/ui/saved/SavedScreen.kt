@@ -1,6 +1,8 @@
 package com.example.konstanz.ui.saved
 
 import com.example.konstanz.data.Texts
+import com.example.konstanz.ui.theme.OnBrand
+import com.example.konstanz.ui.theme.Brand
 import com.example.konstanz.R
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -269,16 +271,16 @@ private fun GoButton(placeName: String, minutes: Int?, onClick: () -> Unit) {
         Modifier
             .size(width = 64.dp, height = 52.dp)
             .clip(Radius.Button)
-            .background(Primary)
+            .background(Brand)
             .clickable(role = Role.Button, onClickLabel = stringResource(R.string.routes_to_x, placeName) + (minutes?.let { ", " + stringResource(R.string.minutes_short, it) } ?: ""), onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        KonstanzIcon(KtIcons.Nav, contentDescription = null, size = 18.dp, tint = White, filled = true)
+        KonstanzIcon(KtIcons.Nav, contentDescription = null, size = 18.dp, tint = OnBrand, filled = true)
         Text(
             minutes?.let { stringResource(R.string.minutes_short, it) } ?: stringResource(R.string.go),
             style = KonstanzType.Caption.copy(fontWeight = FontWeight.ExtraBold, fontFeatureSettings = "tnum"),
-            color = White,
+            color = OnBrand,
         )
     }
 }

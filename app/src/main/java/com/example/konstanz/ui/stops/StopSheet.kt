@@ -1,6 +1,7 @@
 package com.example.konstanz.ui.stops
 
 import com.example.konstanz.data.Texts
+import com.example.konstanz.ui.theme.OnPrimary
 import com.example.konstanz.R
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -98,7 +99,7 @@ fun StopSheet(
     onSelectLine: (String?) -> Unit,
     from: Minutes,
     now: Minutes,
-    onChangeFrom: (Minutes) -> Unit,
+    onChangeFrom: (day: Int, from: Minutes) -> Unit,
     departures: List<StopDeparture>,
     realtime: RealtimeInfo?,
     saved: Boolean,
@@ -106,6 +107,8 @@ fun StopSheet(
     modifier: Modifier = Modifier,
     /** Shared with the map screen so dragging the map also minimizes this sheet. */
     dragState: DragSheetState = rememberDragSheetState(),
+    /** Days from today of [from] (0 = today). */
+    fromDay: Int = 0,
 ) {
     val ready = realtime != null
     var pickingTime by rememberSaveable { mutableStateOf(false) }
@@ -149,7 +152,7 @@ fun StopSheet(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            TimeButton(label = dayLabel(from, now), onClick = { pickingTime = true })
+            TimeButton(label = departuresFromLabel(fromDay, from), onClick = { pickingTime = true })
             // The status gives way (ellipsis) before it pushes the time button off-screen.
             RealtimeStatus(realtime, Modifier.weight(1f, fill = false).padding(start = 12.dp))
         }
@@ -189,8 +192,9 @@ fun StopSheet(
         TimeDialog(
             now = now,
             selected = from,
+            selectedDay = fromDay,
             onDismiss = { pickingTime = false },
-            onSelect = { onChangeFrom(it); pickingTime = false },
+            onSelect = { day, time -> onChangeFrom(day, time); pickingTime = false },
         )
     }
 }
@@ -200,7 +204,7 @@ fun StopSheet(
 private fun StopHeader(stop: Stop, walkMinutes: Int, saved: Boolean, actions: StopSheetActions, dragModifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.Top, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         Box(Modifier.size(44.dp).background(Primary, RoundedCornerShape(13.dp)).then(dragModifier), contentAlignment = Alignment.Center) {
-            KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 24.dp, tint = White)
+            KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 24.dp, tint = OnPrimary)
         }
         Column(Modifier.weight(1f).then(dragModifier)) {
             Text(
@@ -278,7 +282,7 @@ private fun StopSheetPreview() {
     val lines = kotlinx.coroutines.runBlocking { previewRepo.linesAt("bahnhof") }
     KonstanzTheme {
         StopSheet(
-            previewStop, 4, lines, null, {}, previewRepo.now(), previewRepo.now(), {},
+            previewStop, 4, lines, null, {}, previewRepo.now(), previewRepo.now(), { _, _ -> },
             deps, RealtimeInfo(true, 30), saved = false, actions = StopSheetActions({}, {}, {}, {}),
         )
     }
@@ -291,7 +295,7 @@ private fun StopSheetLoadingPreview() {
     val lines = kotlinx.coroutines.runBlocking { previewRepo.linesAt("bahnhof") }
     KonstanzTheme {
         StopSheet(
-            previewStop, 4, lines, null, {}, previewRepo.now(), previewRepo.now(), {},
+            previewStop, 4, lines, null, {}, previewRepo.now(), previewRepo.now(), { _, _ -> },
             deps, realtime = null, saved = true, actions = StopSheetActions({}, {}, {}, {}),
         )
     }

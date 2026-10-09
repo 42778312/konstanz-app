@@ -22,16 +22,20 @@ import com.example.konstanz.data.transit.Leg
 import com.example.konstanz.ui.map.MapOverlayScope
 import com.example.konstanz.ui.theme.Location
 import com.example.konstanz.ui.theme.Ink3
+import com.example.konstanz.ui.theme.IsDark
 import com.example.konstanz.ui.theme.Primary
 import com.example.konstanz.ui.theme.White
 
 /** Unselected alternatives (design system → Route lines: "Grey, unselected; tap to select"). */
-private val AlternativeGrey = Color(0xFFA9ADB5)
+private val AlternativeGrey get() = if (IsDark) Color(0xFF4A4E57) else Color(0xFFA9ADB5)
+
+/** Thin edge around lines in the map's own tone: separates the line from the street without hiding it. */
+private val Casing get() = if (IsDark) Color.Black else White
 
 /**
  * Draws journeys on the map with constant on-screen widths (design system → Route lines):
- * bus = solid red 7 dp on a 12 dp white casing; walking = 5 dp grey dots every 10 dp on a white halo;
- * alternatives = grey 5 dp. The selected journey is drawn last, on top.
+ * bus = solid 5 dp on an 8 dp casing (so the street stays visible); walking = 4 dp dots every 9 dp;
+ * alternatives = grey 4 dp. The selected journey is drawn last, on top.
  * With a [focus] leg (one walk shown on the map), the rest of the journey is faded and the focus drawn darker.
  */
 @Composable
@@ -49,8 +53,8 @@ fun MapOverlayScope.RouteLayer(journeys: List<Journey>, selected: Journey?, focu
         journeys.filter { it.id != selected?.id }.forEach { j ->
             parsed[j.id].orEmpty().forEach { (_, p) ->
                 val sp = screen(p)
-                drawPath(sp, White, style = Stroke(9.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
-                drawPath(sp, AlternativeGrey, style = Stroke(5.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+                drawPath(sp, Casing, style = Stroke(7.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+                drawPath(sp, AlternativeGrey, style = Stroke(4.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
             }
         }
         if (selected != null) {
@@ -64,14 +68,14 @@ fun MapOverlayScope.RouteLayer(journeys: List<Journey>, selected: Journey?, focu
 private fun DrawScope.drawLeg(leg: Leg, path: Path, alpha: Float = 1f, focused: Boolean = false) {
     when (leg) {
         is Leg.Ride -> {
-            drawPath(path, White, alpha, style = Stroke(12.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
-            drawPath(path, Primary, alpha, style = Stroke(7.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+            drawPath(path, Casing, alpha, style = Stroke(8.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+            drawPath(path, Primary, alpha, style = Stroke(5.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
         }
         is Leg.Walk -> if (focused) drawFocusedWalk(path) else {
             // Round caps on zero-length dashes = dots.
-            val dots = PathEffect.dashPathEffect(floatArrayOf(0f, 10.dp.toPx()))
-            drawPath(path, White, alpha, style = Stroke(9.dp.toPx(), cap = StrokeCap.Round, pathEffect = dots))
-            drawPath(path, Ink3, alpha, style = Stroke(5.dp.toPx(), cap = StrokeCap.Round, pathEffect = dots))
+            val dots = PathEffect.dashPathEffect(floatArrayOf(0f, 9.dp.toPx()))
+            drawPath(path, Casing, alpha, style = Stroke(7.dp.toPx(), cap = StrokeCap.Round, pathEffect = dots))
+            drawPath(path, Ink3, alpha, style = Stroke(4.dp.toPx(), cap = StrokeCap.Round, pathEffect = dots))
         }
     }
 }

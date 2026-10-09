@@ -1,6 +1,7 @@
 package com.example.konstanz.ui.map
 
 import android.graphics.Bitmap
+import com.example.konstanz.ui.theme.OnPrimary
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -131,18 +132,16 @@ class NativeStopLayer {
             )
         )
         val clustered = has("point_count")
-        style.addLayer(CircleLayer(CLUSTER_HALO, SOURCE).withFilter(clustered).withProperties(
-            circleColor(Primary.toArgb()), circleOpacity(0.18f), circleRadius(23f),
-        ))
         style.addLayer(CircleLayer(CLUSTER_SHADOW, SOURCE).withFilter(clustered).withProperties(
-            circleColor(0x40000000), circleRadius(18f), circleTranslate(arrayOf(0f, 2f)),
+            circleColor(0x40000000), circleRadius(15f), circleTranslate(arrayOf(0f, 2f)),
         ))
         style.addLayer(CircleLayer(CLUSTER, SOURCE).withFilter(clustered).withProperties(
-            circleColor(Primary.toArgb()), circleRadius(18f), circleStrokeColor(android.graphics.Color.WHITE), circleStrokeWidth(3f),
+            // A calm disc in the sheet colour with a brand ring: groups of stops shouldn't shout over the route.
+            circleColor(Surface.toArgb()), circleRadius(15f), circleStrokeColor(Primary.toArgb()), circleStrokeWidth(2.5f),
         ))
         style.addLayer(SymbolLayer(CLUSTER_COUNT, SOURCE).withFilter(clustered).withProperties(
-            textField(exprToString(get("point_count"))), textFont(arrayOf("Noto Sans Medium")), textSize(14f),
-            textColor(android.graphics.Color.WHITE), textAllowOverlap(true), textIgnorePlacement(true),
+            textField(exprToString(get("point_count"))), textFont(arrayOf("Noto Sans Medium")), textSize(13f),
+            textColor(Primary.toArgb()), textAllowOverlap(true), textIgnorePlacement(true),
         ))
         style.addLayer(CircleLayer(DOT, SOURCE).withFilter(single()).withProperties(
             circleColor(android.graphics.Color.WHITE), circleRadius(4f), circleStrokeColor(Primary.toArgb()), circleStrokeWidth(2.5f),
@@ -204,16 +203,13 @@ class NativeStopLayer {
         }
         val inset = RectF(rect).apply { inset(density, density) }
         c.drawRoundRect(inset, r - density, r - density, edge)
-        val icon = 15 * density
-        val k = icon / 24f
-        val line = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-            style = Paint.Style.STROKE; strokeWidth = 2.4f; color = android.graphics.Color.WHITE
-            strokeCap = Paint.Cap.ROUND; strokeJoin = Paint.Join.ROUND
-        }
+        val icon = 16 * density
+        val k = icon / 256f // Phosphor's grid
+        val glyph = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL; color = OnPrimary.toArgb() }
         c.save()
         c.translate(rect.centerX() - icon / 2, rect.centerY() - icon / 2)
         c.scale(k, k)
-        for (d in KtIcons.Bus.paths) PathParser.createPathFromPathData(d)?.let { c.drawPath(it, line) }
+        for (d in KtIcons.Bus.bold) PathParser.createPathFromPathData(d)?.let { c.drawPath(it, glyph) }
         c.restore()
         return bmp
     }
@@ -221,7 +217,6 @@ class NativeStopLayer {
     companion object {
         private const val SOURCE = "kt-stops"
         private const val TILE_IMAGE = "kt-stop-tile"
-        private const val CLUSTER_HALO = "kt-stop-cluster-halo"
         private const val CLUSTER_SHADOW = "kt-stop-cluster-shadow"
         private const val CLUSTER = "kt-stop-cluster"
         private const val CLUSTER_COUNT = "kt-stop-cluster-count"

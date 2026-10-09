@@ -1,6 +1,8 @@
 package com.example.konstanz.ui.map
 
 import com.example.konstanz.R
+import com.example.konstanz.ui.theme.Surface
+import com.example.konstanz.ui.theme.OnPrimary
 import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.Canvas
@@ -102,7 +104,7 @@ fun MapOverlayScope.StopMarkersLayer(
 
     val bus = rememberVectorPainter(remember { KtIcons.Bus.toImageVector(strokeWidth = 2.4f) })
     val textMeasurer = rememberTextMeasurer()
-    val countStyle = TextStyle(fontFamily = Figtree, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp, color = White)
+    val countStyle = TextStyle(fontFamily = Figtree, fontWeight = FontWeight.ExtraBold, fontSize = 13.sp, color = Primary)
     val countLayouts = remember { HashMap<Int, TextLayoutResult>() }
     val stopLabel = stringResource(R.string.open_stop)
 
@@ -185,7 +187,7 @@ private fun DrawScope.drawTile(c: Offset, bus: androidx.compose.ui.graphics.vect
     drawRoundRect(White, tl + Offset(1.dp.toPx(), 1.dp.toPx()), Size(s - 2.dp.toPx(), s - 2.dp.toPx()), CornerRadius(7.dp.toPx()), style = Stroke(2.dp.toPx()))
     val icon = 15.dp.toPx()
     translate(c.x - icon / 2, c.y - icon / 2) {
-        with(bus) { draw(Size(icon, icon), colorFilter = ColorFilter.tint(White)) }
+        with(bus) { draw(Size(icon, icon), colorFilter = ColorFilter.tint(OnPrimary)) }
     }
 }
 
@@ -196,13 +198,12 @@ private fun DrawScope.drawDot(c: Offset) {
     drawCircle(Primary, r - 1.5.dp.toPx(), c, style = Stroke(3.dp.toPx()))
 }
 
-/** Same look as [ClusterMarker]: red disc with the count, white edge, soft red halo. */
+/** Same look as [ClusterMarker]: a disc in the sheet colour with a brand ring and the count. */
 private fun DrawScope.drawCluster(c: Offset, count: Int, text: TextLayoutResult) {
-    val r = 18.dp.toPx()
-    drawCircle(Primary.copy(alpha = 0.18f), r + 5.dp.toPx(), c)
+    val r = 15.dp.toPx()
     drawCircle(MarkerShadow, r, c + Offset(0f, 2.dp.toPx()))
-    drawCircle(Primary, r, c)
-    drawCircle(White, r - 1.5.dp.toPx(), c, style = Stroke(3.dp.toPx()))
+    drawCircle(Surface, r, c)
+    drawCircle(Primary, r - 1.25.dp.toPx(), c, style = Stroke(2.5.dp.toPx()))
     drawText(text, topLeft = Offset(c.x - text.size.width / 2f, c.y - text.size.height / 2f))
 }
 

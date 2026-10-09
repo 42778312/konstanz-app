@@ -62,7 +62,7 @@ fun KonstanzBottomBar(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
                 ) {
-                    KonstanzIcon(item.icon, contentDescription = null, size = 22.dp, tint = color)
+                    KonstanzIcon(item.icon, contentDescription = null, size = 22.dp, tint = color, filled = selected)
                     Text(
                         item.label,
                         style = KonstanzType.Caption.copy(fontSize = 12.sp, fontWeight = FontWeight.Bold),

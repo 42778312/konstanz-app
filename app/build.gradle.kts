@@ -19,7 +19,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.konstanz"
+        // Play Store id: permanent after the first upload. The Kotlin package (namespace) can differ.
+        applicationId = "de.konstant.app"
         minSdk = 24
         targetSdk = 37
         versionCode = 1

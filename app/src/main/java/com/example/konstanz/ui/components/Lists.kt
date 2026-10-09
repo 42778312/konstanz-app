@@ -1,6 +1,7 @@
 package com.example.konstanz.ui.components
 
 import androidx.compose.animation.animateColorAsState
+import com.example.konstanz.ui.theme.OnPrimary
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -164,7 +165,7 @@ private fun KtSwitchVisual(checked: Boolean) {
                 .offset { androidx.compose.ui.unit.IntOffset(thumbX.roundToPx(), 2.dp.roundToPx()) }
                 .size(26.dp)
                 .dropShadow(CircleShape, Shadow(radius = 3.dp, offset = DpOffset(0.dp, 1.dp), color = Color.Black, alpha = 0.25f))
-                .background(White, CircleShape)
+                .background(if (checked) OnPrimary else White, CircleShape)
         )
     }
 }

@@ -50,44 +50,14 @@ import com.example.konstanz.ui.theme.floatingShadow
 
 // Design system → System states: "Status lives in a small floating pill, never a blocking dialog."
 
-/** The floating data-status pill, from [OfflineData] and the network. Tapping it opens Offline data (25). */
+/** The floating data-status pill, from [OfflineData]. Tapping it opens Offline data (25). */
 @Composable
 fun DataStatusPill(onClick: () -> Unit, modifier: Modifier = Modifier) {
     when (OfflineData.info.shownHealth) {
         DataHealth.Damaged -> StatusPill(stringResource(R.string.data_needs_repair), modifier, icon = KtIcons.Alert, iconTint = Delayed, onClick = onClick)
         DataHealth.Expired -> StatusPill(stringResource(R.string.timetable_expired), modifier, icon = KtIcons.Alert, iconTint = Delayed, onClick = onClick)
         DataHealth.ExpiresSoon -> StatusPill(stringResource(R.string.timetable_ends_soon), modifier, icon = KtIcons.Calendar, iconTint = Delayed, onClick = onClick)
-        else ->
-            if (AppStatus.offline) StatusPill(stringResource(R.string.offline_saved_data), modifier, onClick = onClick)
-            else StatusPill(stringResource(R.string.up_to_date), modifier, icon = KtIcons.Check, iconTint = Live, onClick = onClick)
-    }
-}
-
-/** Dark "You're offline" card (artboard 24), dismissible. */
-@Composable
-fun OfflineBanner(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
-    Row(
-        modifier
-            .fillMaxWidth()
-            .floatingShadow(RoundedCornerShape(16.dp))
-            .background(Inverse, RoundedCornerShape(16.dp))
-            .padding(start = 16.dp, end = 14.dp, top = 14.dp, bottom = 14.dp)
-            .semantics { liveRegion = LiveRegionMode.Polite },
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        KonstanzIcon(KtIcons.CloudOff, contentDescription = null, size = 22.dp, tint = White)
-        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(stringResource(R.string.youre_offline), style = KonstanzType.RowTitle.copy(fontWeight = FontWeight.ExtraBold), color = White)
-            Text(
-                stringResource(R.string.offline_body),
-                style = KonstanzType.BodySmall.copy(fontSize = 14.sp, fontWeight = FontWeight.Normal, lineHeight = 1.4.em),
-                color = White.copy(alpha = 0.85f),
-            )
-        }
-        Box(
-            Modifier.size(36.dp).clip(CircleShape).background(White.copy(alpha = 0.12f)).clickable(role = Role.Button, onClickLabel = stringResource(R.string.dismiss), onClick = onDismiss),
-            contentAlignment = Alignment.Center,
-        ) { KonstanzIcon(KtIcons.Close, contentDescription = stringResource(R.string.dismiss), size = 18.dp, tint = White) }
+        else -> StatusPill(stringResource(R.string.up_to_date), modifier, icon = KtIcons.Check, iconTint = Live, onClick = onClick)
     }
 }
 

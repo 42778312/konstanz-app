@@ -19,7 +19,7 @@ interface TransitRepository {
 
     /**
      * Next departures at a stop from [from]. Summaries ("Next departures") leave cancelled trips out;
-     * the full list keeps them, struck through (artboards 12–14).
+     * the full list keeps them, struck through (artboards 12–14). [dayOffset] = days from today (0 = today).
      */
     suspend fun departures(
         stopId: String,
@@ -27,6 +27,7 @@ interface TransitRepository {
         limit: Int = 10,
         line: String? = null,
         includeCancelled: Boolean = true,
+        dayOffset: Int = 0,
     ): List<StopDeparture>
 
     suspend fun trip(tripId: String): Trip?

@@ -85,7 +85,6 @@ import com.example.konstanz.data.AppStatus
 import com.example.konstanz.ui.components.DataStatusPill
 import com.example.konstanz.ui.components.ErrorCard
 import com.example.konstanz.ui.components.ErrorFootnote
-import com.example.konstanz.ui.components.OfflineBanner
 import com.example.konstanz.ui.components.RouteCard
 import com.example.konstanz.ui.components.StatusPill
 import com.example.konstanz.ui.icons.KonstanzIcon
@@ -269,9 +268,10 @@ private fun StopSheetContent(stop: Stop, dragState: DragSheetState, actions: Mai
     val repo = Transit.repository
     var line by rememberSaveable(stop.id) { mutableStateOf<String?>(null) }
     var fromMinutes by rememberSaveable(stop.id) { mutableIntStateOf(repo.now().value) }
+    var fromDay by rememberSaveable(stop.id) { mutableIntStateOf(0) }
     val lines by produceState(emptyList<com.example.konstanz.data.transit.Line>(), stop.id) { value = repo.linesAt(stop.id) }
-    val departures by produceState(emptyList<StopDeparture>(), stop.id, line, fromMinutes) {
-        value = repo.departures(stop.id, from = com.example.konstanz.data.transit.Minutes(fromMinutes), limit = 20, line = line, includeCancelled = false)
+    val departures by produceState(emptyList<StopDeparture>(), stop.id, line, fromMinutes, fromDay) {
+        value = repo.departures(stop.id, from = com.example.konstanz.data.transit.Minutes(fromMinutes), limit = 20, line = line, includeCancelled = false, dayOffset = fromDay)
     }
     // Realtime is an overlay: when it's unavailable the timetable is shown as scheduled (artboard 32).
     val realtimeOn = AppStatus.realtimeAvailable
@@ -288,7 +288,8 @@ private fun StopSheetContent(stop: Stop, dragState: DragSheetState, actions: Mai
         onSelectLine = { line = it },
         from = com.example.konstanz.data.transit.Minutes(fromMinutes),
         now = repo.now(),
-        onChangeFrom = { fromMinutes = it.value },
+        onChangeFrom = { day, time -> fromDay = day; fromMinutes = time.value },
+        fromDay = fromDay,
         departures = if (realtimeOn) departures else departures.map { it.copy(realtime = com.example.konstanz.data.transit.Realtime.Scheduled) },
         realtime = realtime,
         saved = saved,
@@ -473,9 +474,6 @@ fun MainMapScreen(
             if (picking) {
                 HintPill(stringResource(R.string.hint_long_press))
             } else if (!focused) {
-                if (AppStatus.offline && !AppStatus.offlineBannerDismissed) {
-                    OfflineBanner(onDismiss = { AppStatus.offlineBannerDismissed = true })
-                }
                 Row(verticalAlignment = Alignment.Top) {
                     DataStatusPill(onClick = actions.onOpenOfflineStatus)
                     Spacer(Modifier.weight(1f))

@@ -1,80 +1,105 @@
-# Releasing Konstanz Transit
+# Releasing Konstant
 
-What is ready, what only you can do, and how to build a release.
+What is ready, what only you can do, and the steps to Google Play.
 
-## Status
+## Status (9 Oct 2026)
 
 | | |
 |---|---|
-| Version | 1.0.0 (versionCode 1) — `app/build.gradle.kts` |
-| Build | R8 code + resource shrinking, lint clean, release build tested on the emulator |
-| Tests | 31 unit tests, 26 device tests incl. 8 Compose UI journeys (`./gradlew :app:testDebugUnitTest :app:connectedDebugAndroidTest`) |
-| Data | NVBW timetable (valid until 12 Dec 2026), OpenStreetMap map of 29 Sep 2026, City of Konstanz stop register |
-| Permissions | Location (optional), network state. **No internet permission** — nothing leaves the phone. |
+| App | **Konstant** · `de.konstant.app` · version 1.0.0 (versionCode 1), `app/build.gradle.kts` |
+| SDK | minSdk 24, **targetSdk 37** (Play requires ≥ 36 for new apps since 31 Aug 2026) |
+| Build | `bundleRelease` passes, incl. lint-vital. R8 code + resource shrinking. Release build tested on the emulator: splash, map, stop sheet, day/time picker, route search, settings; no crashes |
+| Bundle | ~34 MB `.aab` (Play delivers each phone only its own CPU type) |
+| Tests | 40 unit tests (`./gradlew :app:testDebugUnitTest`), device tests (`./gradlew :app:connectedDebugAndroidTest`) |
+| Languages | English, German |
+| Permissions | Location only (optional). **No internet permission**: nothing leaves the phone |
+| Data | NVBW timetable (valid until 12 Dec 2026), OpenStreetMap map, City of Konstanz stop register |
+| Store assets | `branding/play-store/`: icon 512, feature graphic 1024×500, 4 phone screenshots 1080×1920 |
+| Privacy policy | `docs/privacy-policy.html` (EN + DE), ready to host |
 
-## Before the first upload — needs you
+## 1 · Decisions only you can make (before the first upload)
 
-1. **App id.** `com.example.konstanz` is rejected by Google Play and can never be changed after the first
-   upload. Choose one you own, e.g. `de.<yourname>.konstanztransit`, and set `applicationId` in
-   `app/build.gradle.kts` (the Kotlin package can stay as it is).
-2. **Upload key.** Create it once and keep it safe (losing it means asking Google to reset it):
+1. ~~App id~~ Done: **`de.konstant.app`** (`app/build.gradle.kts`). Permanent after the first upload.
+2. ~~Support e-mail~~ Done: **konstant@werkflow.cc** (`AppInfo.SUPPORT_EMAIL`, privacy policy page). Use the
+   same address as the Play Console contact e-mail.
+3. **Bus stop data licence.** Confirm the licence of the City of Konstanz stop data so the credit is exact.
+4. **Line colours (optional).** Add the official colours from the Stadtwerke network map to
+   `ui/components/LineColors.kt`.
 
-   ```bash
-   keytool -genkeypair -v -keystore upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
-   ```
+## 2 · Upload key (once, keep it safe)
 
-   Then create `keystore.properties` in the project root (both files are git-ignored):
+```bash
+keytool -genkeypair -v -keystore upload-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+```
 
-   ```properties
-   storeFile=upload-key.jks
-   storePassword=…
-   keyAlias=upload
-   keyPassword=…
-   ```
+Create `keystore.properties` in the project root (both files are git-ignored):
 
-   Without this file the release is signed with the debug key: fine for testing, rejected by Play.
-3. **Support e-mail.** Set `AppInfo.SUPPORT_EMAIL` (`data/AppInfo.kt`): it adds the contact line to the
-   privacy policy and the "Send feedback" row in About.
-4. **Privacy policy URL.** Play needs a public web page. Publish the text of the in-app policy
-   (`ui/about/PrivacyScreen.kt`), e.g. on GitHub Pages, and enter the URL in the Play Console.
-5. **Bus stop data licence.** Confirm where `Bushaltestellen.geojson` comes from and its licence
-   (City of Konstanz open data?), so the credit in About and Licenses is exact.
+```properties
+storeFile=upload-key.jks
+storePassword=…
+keyAlias=upload
+keyPassword=…
+```
 
-## Build
+Back up both files and the passwords outside this computer. With **Play App Signing** (default) Google holds
+the real signing key; this upload key can be reset through Play support if lost, but that takes days.
+Without `keystore.properties` the release is signed with the debug key, which Play rejects.
+
+## 3 · Build
 
 ```bash
 ./gradlew :app:bundleRelease
 ```
 
 Upload `app/build/outputs/bundle/release/app-release.aab`. Keep
-`app/build/outputs/mapping/release/mapping.txt` for each release (it turns crash reports readable).
+`app/build/outputs/mapping/release/mapping.txt` for every release (upload it in Play Console → App bundle
+explorer → Downloads, so crash reports are readable).
 
-## Play Console answers
+## 4 · Host the privacy policy
 
-- **Data safety:** no data collected, no data shared (the app has no internet permission; location is
-  used on the device only). No account, no ads.
-- **Permissions:** location — "show your position, nearby stops and routes from where you are; optional".
-- **Content rating:** everyone (no user content, no ads, no purchases).
-- **Target audience:** general; not designed for children.
-- **Store listing:** screenshots of map, stop, route results, journey; describe it as offline public
-  transport for Konstanz and Kreuzlingen with timetable data from NVBW (scheduled times, no live data yet).
+Play needs a public URL. Simplest: push the repo to GitHub, Settings → Pages → Branch `main`, folder `/docs`.
+The URL is then `https://<user>.github.io/<repo>/privacy-policy.html`.
 
-## Updating the data (each timetable change)
+## 5 · Play Console
 
-The NVBW timetable is valid until the date shown in Settings → Offline data; the app warns 14 days
-before and marks it expired after. For a new timetable:
+1. **Developer account**: play.google.com/console, one-time $25 fee, identity verification (can take days).
+   - *Personal* accounts created after 13 Nov 2023 must run a **closed test with ≥ 12 testers for 14 days in a
+     row** before production is unlocked (testers must stay opted in and actually use the app).
+   - *Organisation* accounts (needs a D-U-N-S number) skip that rule.
+2. **Create app**: name "Konstant", default language German or English, App, Free.
+3. **App content** (left menu → Policy → App content):
+   - Privacy policy: the URL from step 4.
+   - Ads: **No ads**.
+   - App access: **All functionality available without special access**.
+   - Content rating questionnaire: category *Utility/Tools*, answer No to everything → rated for everyone.
+   - Target audience: 18+ / not designed for children (avoids the Families policy).
+   - Data safety: **No data collected, no data shared** (on-device processing of location is not "collection"
+     because it never leaves the phone). Encrypted in transit: not applicable. Deletion: not applicable.
+   - Government app: No. Financial features: None. Health: No. News: No.
+4. **Store listing** (Grow → Store presence → Main store listing):
+   - App name: `Konstant: Bus & Wege Konstanz` (EN: `Konstant: Konstanz Bus & Walk`)
+   - Short + full description: see the brand book's "Store listing" section (DE + EN).
+   - Icon `branding/play-store/icon-512.png`, feature graphic `feature-graphic.png`, phone screenshots
+     `phone-1.png` … `phone-4.png`.
+   - Category: **Maps & Navigation**. Contact e-mail (required).
+5. **Testing → Closed testing**: create a track, add ≥ 12 testers (Google Group or e-mail list), upload the
+   `.aab`, send for review, share the opt-in link. Wait 14 days with ≥ 12 opted in.
+6. **Production**: apply for production access (questions about the test), then create a release with the
+   same `.aab` (or a newer versionCode), countries: Germany, Switzerland (+ others if you like), roll out.
+   First review usually takes a few days.
+
+## Each update
+
+Raise `versionCode` (and `versionName`) in `app/build.gradle.kts`, build, upload to a track, roll out.
+New timetable (before 12 Dec 2026, when the current one ends):
 
 ```bash
 python3 tools/gtfs-import/import_gtfs.py           # new vhb.zip in tools/gtfs-import/data/
 tools/places-import/.venv/bin/python tools/places-import/import_places.py
 ```
 
-then raise `versionCode`, build and upload. For a newer map, see `tools/map/make_style.py`.
-
 ## Known limits (not blockers)
 
-- Scheduled times only; live times need a realtime feed (PLAN.md L4).
-- English only; a German translation would suit most users in Konstanz.
+- Scheduled times only; live times need a realtime feed.
 - Phones in portrait only; tablets get the phone layout.
-- Touch targets follow the design's 44 dp; Android recommends 48 dp.
-- Toolchain updates left for a quiet moment: Kotlin 2.4, Gradle 9.8.
+- Seenachtfest dates for 2027+ need adding to `data/SeasonalEvents.kt` once announced.

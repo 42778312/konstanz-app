@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
@@ -26,7 +27,7 @@ import com.example.konstanz.ui.theme.SkeletonHighlight
 
 /** Skeleton placeholder with a moving highlight (design: kt-shimmer, 1.4 s). Give it a size. */
 @Composable
-fun Shimmer(modifier: Modifier = Modifier) {
+fun Shimmer(modifier: Modifier = Modifier, shape: Shape = Radius.Pill) {
     val transition = rememberInfiniteTransition(label = "shimmer")
     val x by transition.animateFloat(
         initialValue = -300f,
@@ -41,7 +42,7 @@ fun Shimmer(modifier: Modifier = Modifier) {
                 start = Offset(x, 0f),
                 end = Offset(x + 600f, 0f),
             ),
-            Radius.Pill,
+            shape,
         )
     )
 }

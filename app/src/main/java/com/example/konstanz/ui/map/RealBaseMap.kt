@@ -99,37 +99,37 @@ private object OfflineMapFiles {
             .replace("pmtiles://asset://$TILES", "pmtiles://file://${copy.absolutePath}")
         if (dark) {
             // White halos and POI-dot rings sit on land, unlike white roads.
-            style = style.replace("\"text-halo-color\": \"#FFFFFF\"", "\"text-halo-color\": \"#1E2126\"")
-                .replace("\"circle-stroke-color\": \"#FFFFFF\"", "\"circle-stroke-color\": \"#1E2126\"")
+            style = style.replace("\"text-halo-color\": \"#FFFFFF\"", "\"text-halo-color\": \"#000000\"")
+                .replace("\"circle-stroke-color\": \"#FFFFFF\"", "\"circle-stroke-color\": \"#000000\"")
             DARK.forEach { (light, night) -> style = style.replace("\"$light\"", "\"$night\"", ignoreCase = true) }
         }
         return style
     }
 
-    /** The style's light colours → dark ones (same roles as DarkColors' map tokens). POI colours stay. */
+    /** The style's light colours → OLED-dark ones (same roles as DarkColors' map tokens). POI colours stay. */
     private val DARK = mapOf(
-        "#A7D3F2" to "#1B3347", // water
-        "#93C4E8" to "#24425A", // shore
-        "#F6F4EF" to "#1E2126", // land
-        "#CFE8C0" to "#1F2E23", // landcover, parks
-        "#BFDDAB" to "#1C2B20", // forest
-        "#C2E3B2" to "#213325", // pitches
-        "#ECE9E4" to "#23262B", // industrial
-        "#F1E8D8" to "#26252A", // education
-        "#F7E0DE" to "#2B2326", // hospital
-        "#FBFAF7" to "#2A2D33", // pedestrian areas
-        "#EDEAE5" to "#2A2D33", // buildings
-        "#DEDAD3" to "#33363D", // building outlines
-        "#C9C2B6" to "#4A4E56", // paths, steps
-        "#D9D3C9" to "#26292E", // road casings
-        "#FFFFFF" to "#363A41", // roads
+        "#A7D3F2" to "#0A1724", // water
+        "#93C4E8" to "#10263A", // shore
+        "#F6F4EF" to "#050505", // land
+        "#CFE8C0" to "#0B160F", // landcover, parks
+        "#BFDDAB" to "#0A140D", // forest
+        "#C2E3B2" to "#0D1A11", // pitches
+        "#ECE9E4" to "#0E0F11", // industrial
+        "#F1E8D8" to "#100F12", // education
+        "#F7E0DE" to "#140E10", // hospital
+        "#FBFAF7" to "#141518", // pedestrian areas
+        "#EDEAE5" to "#141518", // buildings
+        "#DEDAD3" to "#1E2024", // building outlines
+        "#C9C2B6" to "#3A3D44", // paths, steps
+        "#D9D3C9" to "#141518", // road casings
+        "#FFFFFF" to "#2A2C31", // roads
         "#E5B64C" to "#6B5520", // highway casing
         "#FFD873" to "#8A7230", // highway
-        "#B8B2A8" to "#5A5E66", // rail
+        "#B8B2A8" to "#3A3D44", // rail
         "#B9B2C6" to "#6A6478", // border
         "#5E6168" to "#B5B9C0", // street names
         "#3F7FB5" to "#7FA9C6", // water names
-        "#D6EBF8" to "#1B3347", // water-name halo
+        "#D6EBF8" to "#0A1724", // water-name halo
         "#7D828B" to "#9DA2AB", // district names
     )
 }

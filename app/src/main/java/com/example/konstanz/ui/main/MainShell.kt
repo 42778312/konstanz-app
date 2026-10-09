@@ -53,8 +53,8 @@ enum class MainTab(val route: String, @param:androidx.annotation.StringRes val l
  */
 @Composable
 fun MainShell(
-    onOpenAbout: () -> Unit,
-    onOpenLicenses: () -> Unit,
+    /** Null while there is no support address (see AppInfo.SUPPORT_EMAIL). */
+    onSendFeedback: (() -> Unit)?,
     onOpenPrivacy: () -> Unit,
     onOpenStop: (stopId: String) -> Unit,
     onOpenDeparture: (tripId: String, stopId: String, at: Int) -> Unit,
@@ -140,8 +140,7 @@ fun MainShell(
                     SettingsActions(
                         onClose = { tabNavController.selectTab(MainTab.Map) },
                         onOpenOfflineData = onOpenOfflineData,
-                        onOpenAbout = onOpenAbout,
-                        onOpenLicenses = onOpenLicenses,
+                        onSendFeedback = onSendFeedback,
                         onOpenPrivacy = onOpenPrivacy,
                         onOpenSimulate = onOpenSimulate,
                         onOpenDesignSystem = onOpenDesignSystem,
@@ -172,5 +171,5 @@ private fun NavHostController.selectTab(tab: MainTab) {
 @Preview(widthDp = 390, heightDp = 844)
 @Composable
 private fun MainShellPreview() {
-    KonstanzTheme { MainShell(onOpenAbout = {}, onOpenLicenses = {}, onOpenPrivacy = {}, onOpenStop = {}, onOpenDeparture = { _, _, _ -> }, onOpenSearch = {}, onOpenPlanner = { _, _ -> }, onChooseSavedPlace = {}, onOpenOfflineData = {}, onOpenSimulate = {}, onOpenDesignSystem = {}) }
+    KonstanzTheme { MainShell(onSendFeedback = null, onOpenPrivacy = {}, onOpenStop = {}, onOpenDeparture = { _, _, _ -> }, onOpenSearch = {}, onOpenPlanner = { _, _ -> }, onChooseSavedPlace = {}, onOpenOfflineData = {}, onOpenSimulate = {}, onOpenDesignSystem = {}) }
 }

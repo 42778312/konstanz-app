@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -70,12 +71,12 @@ class MainFlowsTest {
         compose.onNode(hasSetTextAction()).performTextInput("HTWG")
         waitFor("Hochschule für Technik", substring = true)
         compose.onAllNodesWithText("Hochschule für Technik", substring = true).onFirst().performClick()
-        // Place sheet on the map → planner → routes.
+        // Place sheet on the map → planner → the best route opens on the map ("Route 1 of n · …").
         waitFor(s(R.string.route_here))
         compose.onNodeWithText(s(R.string.route_here)).performClick()
         waitFor(s(R.string.find_routes))
         compose.onNodeWithText(s(R.string.find_routes)).performClick()
-        waitFor(s(R.string.routes))
+        waitFor(s(R.string.route_x_of_y, 1, 0, "").substringBefore(" 0"), substring = true)
     }
 
     @Test
@@ -128,8 +129,9 @@ class MainFlowsTest {
         compose.onNodeWithText(s(R.string.timetable_map)).performClick()
         waitFor(s(R.string.storage_used))
         compose.onNodeWithContentDescription(s(R.string.back)).performClick()
-        waitFor(s(R.string.about_sources))
-        compose.onNode(hasText(s(R.string.privacy_policy)) and hasClickAction()).performClick()
+        waitFor(s(R.string.privacy_policy))
+        // Settings is longer than the screen: scroll to the row before tapping it.
+        compose.onNode(hasText(s(R.string.privacy_policy)) and hasClickAction()).performScrollTo().performClick()
         waitFor(s(R.string.pp_short))
     }
 }

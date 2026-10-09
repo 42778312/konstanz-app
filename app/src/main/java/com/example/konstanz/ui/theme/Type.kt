@@ -112,7 +112,7 @@ val Typography = Typography(
 @Composable
 private fun TypePreview() {
     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        Text("Konstanz Transit", style = KonstanzType.Display, color = Ink)
+        Text("Konstant", style = KonstanzType.Display, color = Ink)
         Text("Find buses quickly", style = KonstanzType.Headline, color = Ink)
         Text("Konstanz Bahnhof", style = KonstanzType.TitleL, color = Ink)
         Text("Plan your journey", style = KonstanzType.Title, color = Ink)

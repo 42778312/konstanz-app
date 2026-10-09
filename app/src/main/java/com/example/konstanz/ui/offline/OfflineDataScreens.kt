@@ -43,7 +43,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import com.example.konstanz.data.AppStatus
+import com.example.konstanz.data.SeasonalCalendar
+import com.example.konstanz.data.SeasonalEvent
+import com.example.konstanz.data.SeasonalMoment
+import com.example.konstanz.ui.splash.SplashScreen
 import com.example.konstanz.data.DataHealth
 import com.example.konstanz.data.OfflineData
 import com.example.konstanz.data.OfflineDataInfo
@@ -113,9 +119,6 @@ fun OfflineDataScreen(onBack: () -> Unit) {
                     KtIcons.Calendar, stringResource(R.string.timetable),
                     listOfNotNull("NVBW", info.timetableDate?.display(), info.validUntil?.let { stringResource(R.string.valid_until, it.display()) }).joinToString(" · "),
                 )
-                DataRow(KtIcons.LiveOff, stringResource(R.string.live_times), stringResource(R.string.live_times_sub), iconTint = Ink3) {
-                    IconChip(stringResource(R.string.timetable), KtIcons.Calendar, Ink3, null)
-                }
                 StorageBar(info)
             }
             Row(
@@ -247,33 +250,62 @@ private fun StorageBar(info: OfflineDataInfo) {
 @Composable
 fun SimulateStatesScreen(onBack: () -> Unit) {
     val s = AppStatus
-    Column(Modifier.fillMaxSize().background(Background)) {
-        KtTopBar("Simulate states", onBack = onBack, background = Background)
-        Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            Text(
-                "Show the offline and error screens without turning off Wi-Fi or GPS. States reset when the app restarts.",
-                style = KonstanzType.BodySmall,
-                color = Ink2,
+    var previewEvent by remember { mutableStateOf<SeasonalEvent?>(null) }
+    var previewCountdown by remember { mutableStateOf(false) }
+    Box(Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxSize().background(Background)) {
+            KtTopBar("Simulate states", onBack = onBack, background = Background)
+            Column(Modifier.verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                Text(
+                    "Show the offline and error screens without turning off Wi-Fi or GPS. States reset when the app restarts.",
+                    style = KonstanzType.BodySmall,
+                    color = Ink2,
+                )
+                com.example.konstanz.ui.components.SettingsGroup("States") {
+                    SwitchRow("Location unavailable (31)", s.simulateLocationUnavailable, { s.simulateLocationUnavailable = it }, subtitle = "No GPS fix")
+                    SwitchRow("Realtime unavailable (32)", s.simulateRealtimeUnavailable, { s.simulateRealtimeUnavailable = it }, subtitle = "Stops show scheduled times")
+                    SwitchRow(
+                        "Timetable damaged (34b)", s.simulateDamagedTimetable, { s.simulateDamagedTimetable = it; s.damagedSheetDismissed = false },
+                        subtitle = "Repair sheet on the map; Repair clears it", showDivider = false,
+                    )
+                }
+                com.example.konstanz.ui.components.SettingsGroup("Data") {
+                    val real = Transit.source == DataSource.Timetable
+                    SwitchRow(
+                        DataSource.Timetable.label,
+                        real,
+                        { Transit.select(if (it) DataSource.Timetable else DataSource.Design) },
+                        subtitle = if (real) "Real stops, departures and routes · kept after restart" else "Off: the design's sample network",
+                        showDivider = false,
+                    )
+                }
+                com.example.konstanz.ui.components.SettingsGroup("Seasonal splash") {
+                    val today = remember { SeasonalCalendar.momentOn(java.time.LocalDate.now()) }
+                    SwitchRow("Countdown", previewCountdown, { previewCountdown = it }, subtitle = "Events as 3 days before")
+                    SeasonalEvent.entries.forEach { event ->
+                        com.example.konstanz.ui.components.SettingsRow(
+                            event.name,
+                            subtitle = when {
+                                event != today?.event -> null
+                                today.daysToGo == 0 -> "Today"
+                                else -> "Today: ${today.daysToGo} days to go"
+                            },
+                            showChevron = true,
+                            showDivider = event != SeasonalEvent.entries.last(),
+                            onClick = { previewEvent = event },
+                        )
+                    }
+                }
+            }
+        }
+        // Full-screen preview of the splash; tap or Back closes it.
+        previewEvent?.let { event ->
+            BackHandler { previewEvent = null }
+            SplashScreen(
+                progress = 0.62f,
+                moment = SeasonalMoment(event, daysToGo = if (previewCountdown && !event.isSeason) 3 else 0),
+                modifier = Modifier.clickable(onClickLabel = "Close preview") { previewEvent = null },
             )
-            com.example.konstanz.ui.components.SettingsGroup("States") {
-                SwitchRow("Offline (24)", s.simulateOffline, { s.simulateOffline = it; s.offlineBannerDismissed = false }, subtitle = "No internet, banner on the map")
-                SwitchRow("Location unavailable (31)", s.simulateLocationUnavailable, { s.simulateLocationUnavailable = it }, subtitle = "No GPS fix")
-                SwitchRow("Realtime unavailable (32)", s.simulateRealtimeUnavailable, { s.simulateRealtimeUnavailable = it }, subtitle = "Stops show scheduled times")
-                SwitchRow(
-                    "Timetable damaged (34b)", s.simulateDamagedTimetable, { s.simulateDamagedTimetable = it; s.damagedSheetDismissed = false },
-                    subtitle = "Repair sheet on the map; Repair clears it", showDivider = false,
-                )
-            }
-            com.example.konstanz.ui.components.SettingsGroup("Data") {
-                val real = Transit.source == DataSource.Timetable
-                SwitchRow(
-                    DataSource.Timetable.label,
-                    real,
-                    { Transit.select(if (it) DataSource.Timetable else DataSource.Design) },
-                    subtitle = if (real) "Real stops, departures and routes · kept after restart" else "Off: the design's sample network",
-                    showDivider = false,
-                )
-            }
         }
     }
 }

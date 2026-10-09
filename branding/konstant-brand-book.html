@@ -1,0 +1,554 @@
+<title>Konstant Brand Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one transit line runs down the page; every section is a stop on it. */
+:root {
+  --red: #D4003B;          /* Signalrot: the brand, actions, the line */
+  --red-press: #A8002F;
+  --red-tint: #FCE8EE;
+  --ink: #16181D;          /* Nacht */
+  --ink-2: #4A4F59;
+  --ink-3: #6B7080;
+  --line: #E3E5EA;
+  --ground: #F4F5F7;       /* Uferweiß */
+  --paper: #FFFFFF;
+  --lake: #14395A;         /* Seeblau */
+  --lake-tint: #C9DFEC;
+  --live: #0A7A43;
+  --delay: #9A4A00;
+  --locate: #1F6FEB;
+  --hero-fg: #FFFFFF;
+  --display: "Bricolage Grotesque", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --red: #FF3D6A; --red-press: #D9123F; --red-tint: #3A1621;
+    --ink: #ECEDEF; --ink-2: #B5B9C2; --ink-3: #9096A3; --line: #2C3038;
+    --ground: #111317; --paper: #1B1D22; --lake: #7FA9C6; --lake-tint: #1B3347;
+    --live: #3DC27F; --delay: #F2A54E; --locate: #5B9BFF; --hero-fg: #FFFFFF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --red: #FF3D6A; --red-press: #D9123F; --red-tint: #3A1621;
+  --ink: #ECEDEF; --ink-2: #B5B9C2; --ink-3: #9096A3; --line: #2C3038;
+  --ground: #111317; --paper: #1B1D22; --lake: #7FA9C6; --lake-tint: #1B3347;
+  --live: #3DC27F; --delay: #F2A54E; --locate: #5B9BFF; --hero-fg: #FFFFFF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 400 17px/1.6 var(--body); }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 5vw, 46px); }
+h3 { font-size: 21px; letter-spacing: -0.01em; line-height: 1.2; }
+p { margin: 0; }
+.eyebrow { font: 700 12px/1 var(--body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--red); }
+.lede { font-size: 19px; color: var(--ink-2); max-width: 62ch; }
+.muted { color: var(--ink-3); }
+code, .code { font: 500 13px/1.4 var(--mono); }
+
+/* Brand mark: stroke = currentColor, ring hole = --hole */
+.mark { display: block; color: var(--red); --hole: var(--paper); }
+.mark .diamond { fill: currentColor; }
+
+/* Wordmark: "konstant" with the o drawn as a stop ring */
+.wordmark { font: 800 1em/1 var(--display); letter-spacing: -0.035em; display: inline-flex; align-items: baseline; white-space: nowrap; }
+.wordmark .o { width: 0.55em; height: 0.55em; margin: 0 0.025em; align-self: baseline; transform: translateY(0.02em); border: 0.11em solid currentColor; border-radius: 50%; display: inline-block; }
+.wordmark .o.red { border-color: var(--red); }
+
+/* ---------- hero ---------- */
+.hero { background: #D4003B; color: var(--hero-fg); position: relative; overflow: hidden; padding: 72px 20px 64px; }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-inner { position: relative; max-width: 1080px; margin: 0 auto; display: grid; gap: 28px; }
+.hero .tile { width: 112px; height: 112px; border-radius: 32px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 40px rgba(80, 0, 20, 0.35); }
+.hero .wordmark { font-size: clamp(64px, 14vw, 148px); }
+.hero .wordmark .o { border-color: #fff; }
+.hero .tag { font: 600 clamp(22px, 3.4vw, 30px)/1.25 var(--display); letter-spacing: -0.01em; max-width: 24ch; }
+.hero .sub { font-size: 18px; max-width: 54ch; opacity: 0.92; }
+.hero .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero .chips span { border: 1.5px solid rgba(255,255,255,0.45); border-radius: 999px; padding: 6px 14px; font-weight: 600; font-size: 14px; }
+
+/* ---------- the line ---------- */
+.route { max-width: 1080px; margin: 0 auto; padding: 56px 20px 96px; position: relative; }
+.route::before { content: ""; position: absolute; left: 31px; top: 0; bottom: 40px; width: 6px; border-radius: 3px; background: var(--red); }
+.stop { position: relative; padding-left: 56px; display: grid; gap: 28px; padding-block: 8px 72px; }
+.stop::before { content: ""; position: absolute; left: 0; top: 6px; width: 28px; height: 28px; border-radius: 50%; background: var(--ground); border: 6px solid var(--red); box-sizing: border-box; transform: translateX(-2px); }
+.stop.terminus::before { border-radius: 4px; transform: translateX(-2px) rotate(45deg) scale(0.86); background: var(--red); }
+.stop > header { display: grid; gap: 12px; }
+@media (max-width: 640px) {
+  .route { padding-inline: 16px; }
+  .route::before { left: 25px; }
+  .stop { padding-left: 44px; }
+}
+
+.card { background: var(--paper); border: 1.5px solid var(--line); border-radius: 20px; padding: 24px; min-width: 0; }
+.grid { display: grid; gap: 16px; }
+.grid.two { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.grid.three { grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+.grid.four { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+
+/* statement */
+.statement { font: 600 clamp(22px, 3.2vw, 30px)/1.3 var(--display); letter-spacing: -0.01em; max-width: 34ch; }
+.statement em { font-style: normal; color: var(--red); }
+
+/* pillars */
+.pillar { display: grid; gap: 10px; align-content: start; }
+.pillar .icon { width: 44px; height: 44px; border-radius: 12px; background: var(--red-tint); color: var(--red); display: grid; place-items: center; }
+.pillar p { color: var(--ink-2); font-size: 16px; }
+
+/* features */
+.feature { display: grid; grid-template-rows: auto 1fr; gap: 16px; padding: 0; overflow: hidden; }
+.feature .demo { background: var(--ground); border-bottom: 1.5px solid var(--line); padding: 20px; min-height: 150px; display: grid; align-content: center; gap: 8px; }
+.feature .txt { padding: 0 22px 22px; display: grid; gap: 8px; align-content: start; }
+.feature .txt p { color: var(--ink-2); font-size: 15.5px; }
+.feature .why { font: 600 13px/1.4 var(--body); color: var(--red); }
+.dep { display: flex; align-items: center; gap: 10px; background: var(--paper); border-radius: 12px; padding: 9px 12px; font-size: 14px; font-weight: 600; }
+.badge { background: var(--red); color: #fff; font: 800 13px/1 var(--body); border-radius: 7px; padding: 5px 7px; min-width: 34px; text-align: center; }
+.dep .dest { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dep .min { font-variant-numeric: tabular-nums; font-weight: 800; }
+.pill { font: 700 12px/1 var(--body); border-radius: 999px; padding: 5px 9px; }
+.pill.ok { color: var(--live); background: color-mix(in srgb, var(--live) 14%, transparent); }
+.pill.late { color: var(--delay); background: color-mix(in srgb, var(--delay) 16%, transparent); }
+.legs { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--ink-2); flex-wrap: wrap; }
+.legs .sep { color: var(--ink-3); }
+.big { font: 800 30px/1 var(--display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.turn { display: flex; gap: 10px; align-items: center; font-weight: 600; font-size: 14.5px; }
+.turn b { font: 800 13px/1 var(--body); background: var(--paper); border-radius: 8px; padding: 6px 8px; font-variant-numeric: tabular-nums; }
+.saved { display: flex; gap: 8px; flex-wrap: wrap; }
+.saved span { background: var(--paper); border: 1.5px solid var(--line); border-radius: 999px; padding: 7px 12px; font-weight: 700; font-size: 14px; }
+.signal { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+.signal .bars { display: flex; gap: 3px; align-items: flex-end; }
+.signal .bars i { width: 5px; border-radius: 2px; background: var(--line); }
+.season-row { display: flex; gap: 6px; }
+.season-row i { flex: 1; height: 54px; border-radius: 10px; }
+
+/* logo */
+.logo-stage { display: grid; place-items: center; min-height: 220px; border-radius: 20px; }
+.logo-stage.red { background: #D4003B; }
+.logo-stage.light { background: #FFFFFF; border: 1.5px solid var(--line); }
+.logo-stage.dark { background: #16181D; }
+.logo-stage.lake { background: #14395A; }
+.app-tile { width: 128px; height: 128px; border-radius: 36px; display: grid; place-items: center; box-shadow: 0 12px 30px rgba(22, 24, 29, 0.18); }
+.caption { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 14px; color: var(--ink-3); padding: 12px 4px 0; }
+.caption b { color: var(--ink); font-weight: 700; }
+.lockup { display: flex; align-items: center; gap: 0.32em; font-size: 54px; }
+.lockup .mini { width: 0.95em; height: 0.95em; border-radius: 0.27em; background: #D4003B; display: grid; place-items: center; flex: none; }
+
+.construct { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: center; }
+@media (max-width: 760px) { .construct { grid-template-columns: 1fr; } }
+.construct svg { width: 100%; max-width: 420px; height: auto; justify-self: center; }
+.parts { display: grid; gap: 14px; }
+.part { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+.part .k { width: 34px; height: 34px; border-radius: 10px; background: var(--red-tint); color: var(--red); display: grid; place-items: center; font: 800 14px/1 var(--display); }
+.part p { color: var(--ink-2); font-size: 15.5px; }
+
+.rules { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+.rule { display: grid; gap: 10px; }
+.rule .box { aspect-ratio: 1; max-width: 100%; border-radius: 16px; display: grid; place-items: center; position: relative; overflow: hidden; }
+.rule p { font-size: 14px; color: var(--ink-2); }
+.rule.no .box::after { content: ""; position: absolute; top: 10px; right: 10px; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); clip-path: polygon(20% 10%, 50% 40%, 80% 10%, 90% 20%, 60% 50%, 90% 80%, 80% 90%, 50% 60%, 20% 90%, 10% 80%, 40% 50%, 10% 20%); }
+
+/* colour */
+.swatch { border-radius: 20px; overflow: hidden; border: 1.5px solid var(--line); background: var(--paper); display: grid; }
+.swatch .chip { height: 120px; display: flex; align-items: flex-end; padding: 14px; font: 800 18px/1 var(--display); }
+.swatch .meta { padding: 14px; display: grid; gap: 4px; font-size: 14px; }
+.swatch .meta b { font-size: 16px; }
+.swatch .meta .code { color: var(--ink-3); }
+.semantic { display: flex; flex-wrap: wrap; gap: 10px; }
+.semantic span { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; background: var(--paper); border: 1.5px solid var(--line); border-radius: 999px; padding: 7px 14px 7px 9px; }
+.semantic i { width: 14px; height: 14px; border-radius: 50%; }
+
+/* type */
+.type-row { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 20px; align-items: baseline; padding-block: 18px; border-top: 1.5px solid var(--line); }
+.type-row:first-child { border-top: 0; }
+@media (max-width: 560px) { .type-row { grid-template-columns: 1fr; gap: 6px; } }
+.type-row .spec { font-size: 13px; color: var(--ink-3); }
+.type-row .spec b { display: block; color: var(--ink); font-size: 14px; }
+.t-display { font: 800 clamp(40px, 7vw, 64px)/1 var(--display); letter-spacing: -0.03em; }
+.t-title { font: 800 28px/1.1 var(--display); letter-spacing: -0.02em; }
+.t-body { font: 400 17px/1.55 var(--body); max-width: 60ch; }
+.t-label { font: 700 12px/1 var(--body); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.t-time { font: 800 24px/1 var(--body); font-variant-numeric: tabular-nums; }
+
+/* voice */
+.voice { display: grid; gap: 12px; }
+.say { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 640px) { .say { grid-template-columns: 1fr; } }
+.say > div { border-radius: 14px; padding: 14px 16px; font-size: 15.5px; background: var(--paper); border: 1.5px solid var(--line); }
+.say .yes { border-color: color-mix(in srgb, var(--live) 45%, var(--line)); }
+.say .no { color: var(--ink-3); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--red) 55%, transparent); }
+.say small { display: block; font: 700 11px/1 var(--body); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; text-decoration: none; }
+.say .yes small { color: var(--live); }
+.say .no small { color: var(--red); }
+.taglines { display: grid; gap: 10px; }
+.taglines div { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: baseline; padding: 14px 0; border-top: 1.5px solid var(--line); }
+.taglines div:first-child { border-top: 0; }
+.taglines q { quotes: none; font: 600 21px/1.3 var(--display); letter-spacing: -0.01em; }
+.taglines span { font-size: 13px; color: var(--ink-3); }
+
+/* store */
+.store { display: grid; gap: 14px; }
+.store .field { display: grid; gap: 6px; }
+.store .label { display: flex; justify-content: space-between; gap: 8px; font: 700 12px/1 var(--body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.store .value { background: var(--ground); border-radius: 12px; padding: 12px 14px; font-size: 15.5px; white-space: pre-line; position: relative; }
+.copy { font: 700 12px/1 var(--body); color: var(--red); background: none; border: 1.5px solid currentColor; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+.copy:focus-visible { outline: 3px solid var(--locate); outline-offset: 2px; }
+.seg { display: inline-flex; background: var(--ground); border-radius: 999px; padding: 4px; gap: 4px; }
+.seg button { font: 700 14px/1 var(--body); border: 0; background: none; color: var(--ink-2); padding: 9px 14px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+.seg button:focus-visible { outline: 3px solid var(--locate); outline-offset: 2px; }
+
+footer.colophon { max-width: 1080px; margin: 0 auto; padding: 0 20px 64px 76px; color: var(--ink-3); font-size: 14px; }
+@media (max-width: 640px) { footer.colophon { padding-left: 60px; } }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="k" viewBox="0 0 100 100">
+    <g transform="translate(-4 0)" fill="none" stroke="currentColor" stroke-linecap="round">
+      <path d="M32 20V80" stroke-width="12"/>
+      <path d="M32 62C32 46 70 52 70 35" stroke-width="10"/>
+      <path d="M45 53L63 71" stroke-width="10"/>
+      <circle cx="70" cy="78" r="9" stroke-width="6.5" style="fill: var(--hole)"/>
+      <rect class="diamond" x="62" y="16" width="16" height="16" rx="3" transform="rotate(45 70 24)" stroke="none"/>
+    </g>
+  </symbol>
+</svg>
+
+<section class="hero" aria-labelledby="brand-name">
+  <canvas id="lines" aria-hidden="true"></canvas>
+  <div class="hero-inner">
+    <div class="tile"><svg class="mark" width="78" height="78" style="color:#D4003B;--hole:#fff" aria-hidden="true"><use href="#k"/></svg></div>
+    <h1 id="brand-name" class="wordmark" aria-label="konstant">k<span class="o"></span>nstant</h1>
+    <p class="tag">Konstant unterwegs in Konstanz.</p>
+    <p class="sub">The steady way to move through the city. Buses, walking routes and the map live on your phone, so Konstant opens in a second and keeps working in a Funkloch.</p>
+    <div class="chips" aria-label="Brand promises"><span>Works offline</span><span>Bus + on foot</span><span>No account, no tracking</span><span>Made for Konstanz</span></div>
+  </div>
+</section>
+
+<main class="route">
+
+  <section class="stop" aria-labelledby="idea">
+    <header>
+      <span class="eyebrow">The idea</span>
+      <h2 id="idea">Konstanz, one letter steadier.</h2>
+    </header>
+    <p class="statement">Konstant takes the city's name and changes one letter. The new word means <em>steady</em>, and that is the promise: the app is there whenever you need to move, with signal or without.</p>
+    <div class="grid two">
+      <div class="card">
+        <h3>Who it's for</h3>
+        <p class="muted" style="margin-top:8px">People who live, study and visit here. Students between Uni and Altstadt, commuters from Wollmatingen, visitors who just stepped off the train with roaming switched off.</p>
+      </div>
+      <div class="card">
+        <h3>What makes it different</h3>
+        <p class="muted" style="margin-top:8px">Other apps need the internet to plan a trip. Konstant carries the timetable, the map and the router on the phone. Routes come back in under a second, anywhere in the city.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop" aria-labelledby="pillars">
+    <header>
+      <span class="eyebrow">Brand pillars</span>
+      <h2 id="pillars">Four things Konstant always is.</h2>
+    </header>
+    <div class="grid four">
+      <div class="card pillar">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5-2.7M14 10.3A10 10 0 0 1 19 13M2 9.5a15 15 0 0 1 4.3-2.6M17.7 6.9A15 15 0 0 1 22 9.5"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg></div>
+        <h3>Steady</h3>
+        <p>Works without internet. Opens instantly. Never a spinner where an answer should be.</p>
+      </div>
+      <div class="card pillar">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="18" r="3"/><path d="M8.5 16C12 12 12 8 18 6"/><path d="M16 4l3 2-2 3"/></svg></div>
+        <h3>Door to door</h3>
+        <p>The bus and the walk on both ends, planned together, with turn-by-turn steps for the last bit.</p>
+      </div>
+      <div class="card pillar">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Honest</h3>
+        <p>Times come straight from the published timetable and are labelled as scheduled. No account, no ads, no tracking.</p>
+      </div>
+      <div class="card pillar">
+        <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 17c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M12 3v9M12 3l5 6h-5"/></svg></div>
+        <h3>Local</h3>
+        <p>Built for Konstanz only: its districts on the map, Fasnacht and Seenachtfest on the start screen.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop" aria-labelledby="features">
+    <header>
+      <span class="eyebrow">Features people love</span>
+      <h2 id="features">Show the moment, not the menu.</h2>
+      <p class="lede">Every feature is marketed as a moment from someone's day in Konstanz. These six lead every store listing, poster and post, in this order.</p>
+    </header>
+    <div class="grid three">
+      <article class="card feature">
+        <div class="demo">
+          <div class="signal"><span class="bars" aria-hidden="true"><i style="height:6px"></i><i style="height:10px"></i><i style="height:14px"></i><i style="height:18px"></i></span>No signal</div>
+          <div class="dep"><span class="badge">5</span><span class="dest">Wollmatingen</span><span class="min">3 min</span></div>
+        </div>
+        <div class="txt">
+          <h3>Works in a Funkloch</h3>
+          <p>Timetable, map and route planner are stored on the phone. No signal, no roaming, no problem.</p>
+          <span class="why">Why it lands: everyone has stood at a stop with one bar.</span>
+        </div>
+      </article>
+      <article class="card feature">
+        <div class="demo">
+          <div class="dep"><span class="badge">1</span><span class="dest">Sternenplatz</span><span class="min">2 min</span></div>
+          <div class="dep"><span class="badge">9A</span><span class="dest">Universität</span><span class="min">6 min</span></div>
+        </div>
+        <div class="txt">
+          <h3>Departures at a glance</h3>
+          <p>Tap any stop to see what leaves next, filtered by line, straight from the timetable on your phone.</p>
+          <span class="why">Why it lands: one tap answers "do I need to run?"</span>
+        </div>
+      </article>
+      <article class="card feature">
+        <div class="demo">
+          <div class="big">14:02 – 14:21</div>
+          <div class="legs">🚶 4 <span class="sep">›</span><span class="badge">5</span><span class="sep">›</span><span class="badge">9A</span><span class="sep">›</span>🚶 2</div>
+        </div>
+        <div class="txt">
+          <h3>Best route in under a second</h3>
+          <p>Choose fastest, least walking or fewest transfers. The phone does the maths, so answers come back instantly.</p>
+          <span class="why">Why it lands: speed people can feel.</span>
+        </div>
+      </article>
+      <article class="card feature">
+        <div class="demo">
+          <div class="turn"><b>120 m</b>Turn left onto Marktstätte</div>
+          <div class="turn"><b>60 m</b>Your stop is on the right</div>
+        </div>
+        <div class="txt">
+          <h3>Walk the last bit</h3>
+          <p>Turn-by-turn walking steps to the stop and from the stop to the door, on the offline map.</p>
+          <span class="why">Why it lands: the Altstadt is a maze for visitors.</span>
+        </div>
+      </article>
+      <article class="card feature">
+        <div class="demo">
+          <div class="saved"><span>⌂ Home</span><span>Work</span><span>Universität Konstanz</span></div>
+        </div>
+        <div class="txt">
+          <h3>Home in one tap</h3>
+          <p>Save Home, Work and favourite places. Your location stays on your device and is never sent anywhere.</p>
+          <span class="why">Why it lands: fast and private, without asking for trust.</span>
+        </div>
+      </article>
+      <article class="card feature">
+        <div class="demo">
+          <div class="season-row" aria-hidden="true"><i style="background:#2B4A6F"></i><i style="background:#4E9A68"></i><i style="background:#0E7C9A"></i><i style="background:#9A4E1C"></i><i style="background:#6A2C91"></i></div>
+          <div style="font-weight:700;font-size:14px">Fasnacht · in 3 days</div>
+        </div>
+        <div class="txt">
+          <h3>Feels like Konstanz today</h3>
+          <p>The start screen dresses up for the season and counts down to Fasnacht, Seenachtfest, Christmas and more.</p>
+          <span class="why">Why it lands: people screenshot it and share it.</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="stop" aria-labelledby="logo">
+    <header>
+      <span class="eyebrow">Logo</span>
+      <h2 id="logo">A K drawn as a journey.</h2>
+      <p class="lede">The mark is a capital K built from the app's own map symbols. Read it from the bottom: you start at a stop, join the line and arrive at your destination.</p>
+    </header>
+
+    <div class="card construct">
+      <svg viewBox="0 0 100 100" role="img" aria-label="Logo construction on a 100 unit grid">
+        <defs><pattern id="g" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="var(--line)" stroke-width="0.4"/></pattern></defs>
+        <rect width="100" height="100" fill="url(#g)"/>
+        <rect x="10" y="10" width="80" height="80" fill="none" stroke="var(--ink-3)" stroke-width="0.4" stroke-dasharray="1.5 1.5"/>
+        <use href="#k" width="100" height="100" style="color: var(--red); --hole: var(--paper)"/>
+        <g font-family="Figtree, sans-serif" font-size="4" font-weight="700" fill="var(--ink)">
+          <text x="14" y="16">A</text><text x="70" y="10.5">B</text><text x="76" y="93">C</text><text x="38" y="48">D</text>
+        </g>
+      </svg>
+      <div class="parts">
+        <div class="part"><span class="k">A</span><div><h3>The line</h3><p>A steady vertical stem, 12 units wide. It stands for the network that is always there.</p></div></div>
+        <div class="part"><span class="k">B</span><div><h3>The destination</h3><p>The diamond the app uses for "where you're going". It sits on the curve's tangent so the route flows into it.</p></div></div>
+        <div class="part"><span class="k">C</span><div><h3>The start</h3><p>The open stop ring, the app's symbol for "where you are".</p></div></div>
+        <div class="part"><span class="k">D</span><div><h3>The transfer</h3><p>Where the two arms meet. One trip, joined up.</p></div></div>
+        <p class="muted" style="font-size:14px">Built on a 100-unit grid with a 10-unit safe zone. Strokes 12 / 10 / 6.5, round caps. The ring is filled with the background colour so it stays open on any surface.</p>
+      </div>
+    </div>
+
+    <div class="grid four">
+      <div>
+        <div class="logo-stage red"><div class="app-tile" style="background:#D4003B"><svg class="mark" width="92" height="92" style="color:#fff;--hole:#D4003B" aria-hidden="true"><use href="#k"/></svg></div></div>
+        <div class="caption"><b>App icon</b><span>Primary</span></div>
+      </div>
+      <div>
+        <div class="logo-stage light"><div class="app-tile" style="background:#fff"><svg class="mark" width="92" height="92" style="color:#D4003B;--hole:#fff" aria-hidden="true"><use href="#k"/></svg></div></div>
+        <div class="caption"><b>On light</b><span>Splash, About</span></div>
+      </div>
+      <div>
+        <div class="logo-stage dark"><div class="app-tile" style="background:#16181D"><svg class="mark" width="92" height="92" style="color:#FF3D6A;--hole:#16181D" aria-hidden="true"><use href="#k"/></svg></div></div>
+        <div class="caption"><b>Night</b><span>Dark mode</span></div>
+      </div>
+      <div>
+        <div class="logo-stage lake"><svg class="mark" width="110" height="110" style="color:#fff;--hole:#14395A" aria-hidden="true"><use href="#k"/></svg></div>
+        <div class="caption"><b>Mark only</b><span>Themed icon, stickers</span></div>
+      </div>
+    </div>
+
+    <div class="grid two">
+      <div>
+        <div class="logo-stage light" style="padding:24px">
+          <div class="lockup" style="color:#16181D"><span class="mini"><svg class="mark" width="40" height="40" style="color:#fff;--hole:#D4003B" aria-hidden="true"><use href="#k"/></svg></span><span class="wordmark">k<span class="o red"></span>nstant</span></div>
+        </div>
+        <div class="caption"><b>Horizontal lockup</b><span>Website, posters, store banner</span></div>
+      </div>
+      <div>
+        <div class="logo-stage red" style="padding:24px">
+          <span class="wordmark" style="font-size:64px;color:#fff">k<span class="o"></span>nstant</span>
+        </div>
+        <div class="caption"><b>Wordmark</b><span>Bricolage Grotesque 800, −3.5% tracking, the o is a stop ring</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="display:grid;gap:18px">
+      <h3>Using the logo</h3>
+      <div class="rules">
+        <div class="rule"><div class="box" style="background:var(--ground)"><svg class="mark" width="70" height="70" style="--hole:var(--ground)" aria-hidden="true"><use href="#k"/></svg></div><p><b>Clear space</b> of one ring width on every side.</p></div>
+        <div class="rule"><div class="box" style="background:var(--ground)"><svg class="mark" width="24" height="24" style="--hole:var(--ground)" aria-hidden="true"><use href="#k"/></svg></div><p><b>Smallest size</b> 24 px, or 16 dp in the app.</p></div>
+        <div class="rule no"><div class="box" style="background:var(--ground)"><svg class="mark" width="70" height="70" style="--hole:var(--ground);transform:rotate(-14deg)" aria-hidden="true"><use href="#k"/></svg></div><p>Don't rotate or tilt it.</p></div>
+        <div class="rule no"><div class="box" style="background:var(--ground)"><svg class="mark" width="70" height="70" style="color:#1F6FEB;--hole:var(--ground)" aria-hidden="true"><use href="#k"/></svg></div><p>Don't recolour it outside the palette.</p></div>
+        <div class="rule no"><div class="box" style="background:var(--ground)"><svg class="mark" width="90" height="56" preserveAspectRatio="none" viewBox="0 0 100 100" style="--hole:var(--ground)" aria-hidden="true"><use href="#k"/></svg></div><p>Don't stretch or squash it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stop" aria-labelledby="colour">
+    <header>
+      <span class="eyebrow">Colour</span>
+      <h2 id="colour">Signal red on lake and shore.</h2>
+      <p class="lede">Red is the brand and the line. It is used for one thing per screen: the action, the route, the mark. Everything else stays calm.</p>
+    </header>
+    <div class="grid four">
+      <div class="swatch"><div class="chip" style="background:#D4003B;color:#fff">Aa</div><div class="meta"><b>Signalrot</b><span class="code">#D4003B · night #D9123F</span><span class="muted">Brand, actions, routes</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#16181D;color:#fff">Aa</div><div class="meta"><b>Nacht</b><span class="code">#16181D</span><span class="muted">Text, dark surfaces</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#14395A;color:#C9DFEC">Aa</div><div class="meta"><b>Seeblau</b><span class="code">#14395A · tint #C9DFEC</span><span class="muted">Lake on the map, secondary brand</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#F4F5F7;color:#16181D">Aa</div><div class="meta"><b>Uferweiß</b><span class="code">#F4F5F7 · paper #FFFFFF</span><span class="muted">Backgrounds, cards</span></div></div>
+    </div>
+    <div class="card" style="display:grid;gap:12px">
+      <h3>Status colours</h3>
+      <p class="muted" style="font-size:15.5px">Only for status, never decoration. Green is reserved for live, on-time departures, which will arrive with a future version.</p>
+      <div class="semantic"><span><i style="background:var(--live)"></i>On time · live</span><span><i style="background:var(--delay)"></i>Delayed</span><span><i style="background:var(--locate)"></i>Your location</span><span><i style="background:var(--ink)"></i>Cancelled</span></div>
+    </div>
+  </section>
+
+  <section class="stop" aria-labelledby="type">
+    <header>
+      <span class="eyebrow">Typography</span>
+      <h2 id="type">Bold where it counts, easy everywhere else.</h2>
+    </header>
+    <div class="card" style="padding-block:6px">
+      <div class="type-row"><div class="spec"><b>Display</b>Bricolage Grotesque 800</div><div class="t-display">Noch 3 Min.</div></div>
+      <div class="type-row"><div class="spec"><b>Title</b>Bricolage Grotesque 800</div><div class="t-title">Routen nach Petershausen</div></div>
+      <div class="type-row"><div class="spec"><b>Body</b>Figtree 400–600</div><div class="t-body">Konstant plans your trip on the phone, so it works at the Rhine bridge, on the ferry pier and deep in the Altstadt.</div></div>
+      <div class="type-row"><div class="spec"><b>Times</b>Figtree 800, tabular</div><div class="t-time">14:02 · 14:21 · 14:38</div></div>
+      <div class="type-row"><div class="spec"><b>Label</b>Figtree 700, +14%</div><div class="t-label">Abfahrten · Bahnhof/Zoll</div></div>
+    </div>
+  </section>
+
+  <section class="stop" aria-labelledby="voice">
+    <header>
+      <span class="eyebrow">Voice</span>
+      <h2 id="voice">Talk like a calm local.</h2>
+      <p class="lede">Short, warm and exact. Say what is happening and what to do next. German first, English always available.</p>
+    </header>
+    <div class="voice">
+      <div class="say"><div class="yes"><small>Say</small>Your bus leaves in 3 min from Sternenplatz.</div><div class="no"><small>Not</small>Departure event scheduled in T-180 seconds.</div></div>
+      <div class="say"><div class="yes"><small>Say</small>No internet. Routes still work.</div><div class="no"><small>Not</small>Error: network unavailable. Some features may be limited.</div></div>
+      <div class="say"><div class="yes"><small>Say</small>Timetable repaired. Everything works again.</div><div class="no"><small>Not</small>Database integrity restoration completed successfully!</div></div>
+    </div>
+    <div class="card taglines">
+      <div><q>Konstant unterwegs in Konstanz.</q><span>Primary · DE</span></div>
+      <div><q>The steady way to move through Konstanz.</q><span>Primary · EN</span></div>
+      <div><q>Auch im Funkloch.</q><span>Offline campaign</span></div>
+      <div><q>Abfahrt? Weißt du in einer Sekunde.</q><span>Speed campaign</span></div>
+      <div><q>Vom Bahnhof bis vor die Tür.</q><span>Visitors</span></div>
+    </div>
+  </section>
+
+  <section class="stop terminus" aria-labelledby="store">
+    <header>
+      <span class="eyebrow">Store listing</span>
+      <h2 id="store">Ready to paste.</h2>
+      <p class="lede">Google Play limits: name 30, short description 80 characters.</p>
+    </header>
+    <div class="card store">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" id="lang-de" aria-pressed="true" data-lang="de">Deutsch</button>
+        <button type="button" id="lang-en" aria-pressed="false" data-lang="en">English</button>
+      </div>
+      <div class="field"><div class="label"><span>App name</span><span data-count="name"></span></div><div class="value" data-field="name"></div></div>
+      <div class="field"><div class="label"><span>Short description</span><span data-count="short"></span></div><div class="value" data-field="short"></div></div>
+      <div class="field"><div class="label"><span>Full description</span><button class="copy" type="button" id="copy-full">Copy</button></div><div class="value" data-field="full"></div></div>
+    </div>
+  </section>
+</main>
+
+<footer class="colophon">Konstant brand book · logo files in <code>branding/</code>: konstant-icon.svg, konstant-icon-light.svg, konstant-icon-dark.svg, konstant-mark.svg</footer>
+
+<script>
+(function () {
+  // Faint route lines in the hero, as on the splash screen.
+  const c = document.getElementById('lines');
+  const draw = () => {
+    const r = c.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    c.width = r.width * d; c.height = r.height * d;
+    const x = c.getContext('2d'); x.scale(d, d);
+    x.strokeStyle = 'rgba(255,255,255,0.16)'; x.lineWidth = 3; x.lineCap = 'round';
+    const W = r.width, H = r.height;
+    const path = (pts, dash) => {
+      x.setLineDash(dash || []); x.beginPath(); x.moveTo(pts[0], pts[1]);
+      x.bezierCurveTo(pts[2], pts[3], pts[4], pts[5], pts[6], pts[7]);
+      x.bezierCurveTo(pts[8], pts[9], pts[10], pts[11], pts[12], pts[13]); x.stroke();
+    };
+    path([-20, H*0.8, W*0.2, H*0.55, W*0.4, H*0.95, W*0.62, H*0.7, W*0.8, H*0.5, W*0.95, H*0.6, W+20, H*0.45]);
+    path([-20, H*0.92, W*0.25, H*0.7, W*0.45, H*1.05, W*0.7, H*0.85, W*0.85, H*0.72, W*0.95, H*0.8, W+20, H*0.7], [2, 12]);
+    path([-20, H*0.15, W*0.2, H*0.3, W*0.45, H*0.02, W*0.65, H*0.18, W*0.8, H*0.3, W*0.95, H*0.2, W+20, H*0.1]);
+  };
+  draw(); addEventListener('resize', draw);
+
+  const copy = {
+    de: {
+      name: 'Konstant: Bus & Wege Konstanz',
+      short: 'Bus, Fußwege und Karte für Konstanz. Funktioniert auch ohne Internet.',
+      full: 'Konstant ist der ruhige Weg durch Konstanz. Fahrplan, Karte und Routenplaner sind auf deinem Handy gespeichert. Die App öffnet sofort und funktioniert auch im Funkloch.\n\n• Abfahrten an jeder Haltestelle, direkt aus dem Fahrplan\n• Die beste Route in unter einer Sekunde: schnellste, wenig Fußweg oder wenig Umstiege\n• Schritt-für-Schritt-Fußwege zur Haltestelle und bis vor die Tür\n• Offline-Karte mit allen Haltestellen\n• Zuhause, Arbeit und Lieblingsorte mit einem Tipp\n• Dein Standort bleibt auf deinem Gerät\n• Hell- und Dunkelmodus, Deutsch und Englisch\n• Der Startbildschirm feiert mit: Fasnacht, Seenachtfest, Weihnachten und jede Jahreszeit\n\nKonstant unterwegs in Konstanz.'
+    },
+    en: {
+      name: 'Konstant: Konstanz Bus & Walk',
+      short: 'Buses, walking routes and maps for Konstanz. Works without internet.',
+      full: 'Konstant is the steady way to move through Konstanz. The timetable, the map and the route planner live on your phone, so the app opens instantly and keeps working without signal.\n\n• Departures at every stop, straight from the timetable\n• The best route in under a second: fastest, least walking or fewest transfers\n• Turn-by-turn walking directions to the stop and to your door\n• Offline map with every bus stop\n• Home, Work and favourite places in one tap\n• Your location stays on your device\n• Light and dark mode, German and English\n• The start screen celebrates Fasnacht, Seenachtfest, Christmas and every season\n\nThe steady way to move through Konstanz.'
+    }
+  };
+  let lang = 'de';
+  const render = () => {
+    const t = copy[lang];
+    document.querySelectorAll('[data-field]').forEach(el => { el.textContent = t[el.dataset.field]; });
+    document.querySelector('[data-count="name"]').textContent = t.name.length + ' / 30';
+    document.querySelector('[data-count="short"]').textContent = t.short.length + ' / 80';
+    document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  };
+  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { lang = b.dataset.lang; render(); }));
+  document.getElementById('copy-full').addEventListener('click', e => {
+    const btn = e.currentTarget, el = document.querySelector('[data-field="full"]');
+    const done = () => { btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = 'Copy'; }, 1600); };
+    const select = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected'; };
+    try { navigator.clipboard.writeText(el.textContent).then(done, select); } catch (_) { select(); }
+  });
+  render();
+})();
+</script>

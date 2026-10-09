@@ -1,6 +1,8 @@
 package com.example.konstanz.ui.onboarding
 
 import com.example.konstanz.data.Texts
+import com.example.konstanz.ui.theme.OnBrand
+import com.example.konstanz.ui.theme.Brand
 import com.example.konstanz.R
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -141,8 +143,9 @@ fun TransportIllustration(modifier: Modifier = Modifier) {
                 Text("Konstanz Bahnhof", style = KonstanzType.RowTitle.copy(fontWeight = FontWeight.ExtraBold), color = Ink)
             }
             val departures = listOf(
-                Departure("14:40", line = "12", destination = "Wollmatingen", status = TripStatus.OnTime),
-                Departure("14:47", scheduledTime = "14:44", line = "5", destination = "Allmannsdorf", status = TripStatus.Delay(3)),
+                // Timetable times only: the app has no live data.
+                Departure("14:40", line = "12", destination = "Wollmatingen", status = TripStatus.Scheduled),
+                Departure("14:44", line = "5", destination = "Allmannsdorf", status = TripStatus.Scheduled),
                 Departure("14:55", line = "8", destination = "Universität", status = TripStatus.Scheduled),
             )
             departures.forEachIndexed { i, d -> DepartureRow(d, onClick = {}, showDivider = i < departures.lastIndex) }
@@ -155,10 +158,10 @@ fun TransportIllustration(modifier: Modifier = Modifier) {
                 .rotate(-8f)
                 .size(72.dp)
                 .dropShadow(tile, Shadow(radius = 24.dp, offset = DpOffset(0.dp, 8.dp), color = Primary, alpha = 0.35f))
-                .background(Primary, tile),
+                .background(Brand, tile),
             contentAlignment = Alignment.Center,
         ) {
-            KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 38.dp, tint = White, strokeWidth = 2.2f)
+            KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 38.dp, tint = OnBrand, strokeWidth = 2.2f)
         }
     }
 }

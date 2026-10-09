@@ -36,8 +36,18 @@ private val c get() = ActivePalette.colors
 /** Always white: text and icons on brand, status and [Inverse] fills, marker rings. Not a surface — use [Surface]. */
 val White = Color(0xFFFFFFFF)
 
+/** True in the dark (OLED black) palette. */
+val IsDark get() = c.isDark
+
+/** The logo's deep mint: the mark on its white tile, the same in light and dark. */
+val BrandDeep = Color(0xFF17784A)
+
 // Brand
-val Primary get() = c.primary                 // actions, transit
+val Brand get() = c.brand                     // mint brand fill: main buttons, line badges, splash
+val BrandPressed get() = c.brandPressed
+val OnBrand get() = c.onBrand                 // text/icons on Brand
+val Primary get() = c.primary                 // brand colour that reads on surfaces: lines, icons, markers
+val OnPrimary get() = c.onPrimary             // text/icons on Primary fills
 val PrimaryPressed get() = c.primaryPressed   // hover / pressed
 val PrimaryTint get() = c.primaryTint         // tonal surfaces
 val OnPrimaryTint get() = c.onPrimaryTint     // text/icons on PrimaryTint
@@ -81,7 +91,11 @@ val MapWaterLabel get() = c.mapWaterLabel       // Bodensee, Konstanzer Trichter
 @Immutable
 data class KonstanzColors(
     val isDark: Boolean,
+    val brand: Color,
+    val brandPressed: Color,
+    val onBrand: Color,
     val primary: Color,
+    val onPrimary: Color,
     val primaryPressed: Color,
     val primaryTint: Color,
     val onPrimaryTint: Color,
@@ -119,10 +133,15 @@ data class KonstanzColors(
 
 val LightColors = KonstanzColors(
     isDark = false,
-    primary = Color(0xFFD4003B),
-    primaryPressed = Color(0xFFA8002F),
-    primaryTint = Color(0xFFFCE8EE),
-    onPrimaryTint = Color(0xFFB00032),
+    // Mint #CCF9D3 is the brand. Too light for lines and icons on white, so those use its deep green (5.5:1).
+    brand = Color(0xFFCCF9D3),
+    brandPressed = Color(0xFFB2EEBD),
+    onBrand = Color(0xFF0B3B22),
+    primary = Color(0xFF17784A),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryPressed = Color(0xFF11613B),
+    primaryTint = Color(0xFFE6F8EA),
+    onPrimaryTint = Color(0xFF17784A),
     surface = Color(0xFFFFFFFF),
     inverse = Color(0xFF16181D),
     background = Color(0xFFF4F5F7),
@@ -153,39 +172,44 @@ val LightColors = KonstanzColors(
     mapWaterLabel = Color(0xFF5C88A3),
 )
 
-// Dark: same roles, contrast kept (Ink3 ≥ 4.5:1 on Surface, white on Primary ≥ 4.5:1).
+// Dark: true black for OLED screens (pixels off), near-black cards and sheets just above it.
+// Same roles, contrast kept (Ink3 ≥ 4.5:1 on Surface). Mint reads on black, so it is Primary too.
 val DarkColors = KonstanzColors(
     isDark = true,
-    primary = Color(0xFFD9123F),
-    primaryPressed = Color(0xFFB0002F),
-    primaryTint = Color(0xFF3A1621),
-    onPrimaryTint = Color(0xFFFF8FA8),
-    surface = Color(0xFF1B1D22),
-    inverse = Color(0xFF3A3E47),
-    background = Color(0xFF111317),
+    brand = Color(0xFFCCF9D3),
+    brandPressed = Color(0xFFB2EEBD),
+    onBrand = Color(0xFF0B3B22),
+    primary = Color(0xFFCCF9D3),
+    onPrimary = Color(0xFF0B3B22),
+    primaryPressed = Color(0xFFB2EEBD),
+    primaryTint = Color(0xFF0F2418),
+    onPrimaryTint = Color(0xFFCCF9D3),
+    surface = Color(0xFF0E0F11),
+    inverse = Color(0xFF2A2C31),
+    background = Color(0xFF000000),
     ink = Color(0xFFECEDEF),
     ink2 = Color(0xFFC2C5CC),
     ink3 = Color(0xFF9DA2AB),
     ink4 = Color(0xFF6B7079),
-    line = Color(0xFF2E3138),
-    dotInactive = Color(0xFF3A3D44),
-    switchTrackOff = Color(0xFF4A4E57),
-    skeletonBase = Color(0xFF25282E),
-    skeletonHighlight = Color(0xFF2F3239),
-    skeletonBar = Color(0xFF3A3D44),
+    line = Color(0xFF1F2125),
+    dotInactive = Color(0xFF2E3035),
+    switchTrackOff = Color(0xFF3A3D44),
+    skeletonBase = Color(0xFF17181B),
+    skeletonHighlight = Color(0xFF212327),
+    skeletonBar = Color(0xFF2E3035),
     location = Color(0xFF5B9BFF),
     live = Color(0xFF3DC27F),
-    liveTint = Color(0xFF14301F),
+    liveTint = Color(0xFF0E2417),
     delayed = Color(0xFFF2A54E),
-    delayedTint = Color(0xFF3A2914),
+    delayedTint = Color(0xFF2A1D0E),
     detour = Color(0xFFB98DF2),
-    detourTint = Color(0xFF2B1F3E),
-    mapLand = Color(0xFF1E2126),
-    mapWater = Color(0xFF1B3347),
-    mapPark = Color(0xFF1F2E23),
-    mapBuilding = Color(0xFF2A2D33),
-    mapRoad = Color(0xFF363A41),
-    mapRoadCasing = Color(0xFF26292E),
+    detourTint = Color(0xFF1E1630),
+    mapLand = Color(0xFF050505),
+    mapWater = Color(0xFF0A1724),
+    mapPark = Color(0xFF0B160F),
+    mapBuilding = Color(0xFF141518),
+    mapRoad = Color(0xFF2A2C31),
+    mapRoadCasing = Color(0xFF141518),
     mapDistrictLabel = Color(0xFF8A8E96),
     mapWaterLabel = Color(0xFF7FA9C6),
 )
@@ -194,7 +218,7 @@ val DarkColors = KonstanzColors(
 @Composable
 private fun ColorsPreview() {
     val groups = listOf(
-        "Brand" to listOf("Primary" to Primary, "Pressed" to PrimaryPressed, "Tint" to PrimaryTint, "OnTint" to OnPrimaryTint, "Surface" to Surface),
+        "Brand" to listOf("Brand" to Brand, "Primary" to Primary, "Pressed" to PrimaryPressed, "Tint" to PrimaryTint, "OnTint" to OnPrimaryTint, "Surface" to Surface),
         "Neutrals" to listOf("Ink" to Ink, "Ink2" to Ink2, "Ink3" to Ink3, "Ink4" to Ink4, "Line" to Line, "Bg" to Background),
         "Status" to listOf("Location" to Location, "Live" to Live, "LiveTint" to LiveTint, "Delayed" to Delayed, "DelayTint" to DelayedTint, "Detour" to Detour),
         "Map" to listOf("Land" to MapLand, "Water" to MapWater, "Park" to MapPark, "Building" to MapBuilding, "Casing" to MapRoadCasing),

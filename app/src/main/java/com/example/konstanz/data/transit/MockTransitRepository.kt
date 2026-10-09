@@ -38,7 +38,9 @@ class MockTransitRepository(
         limit: Int,
         line: String?,
         includeCancelled: Boolean,
+        dayOffset: Int,
     ): List<StopDeparture> {
+        // The sample network runs the same every day.
         simulateLatency()
         val all = if (stopId == "bahnhof") data.bahnhofDepartures else generatedDepartures(stopId)
         return all

@@ -16,7 +16,7 @@ private val LocalKonstanzColors = staticCompositionLocalOf { LightColors }
 // Brand-coloured in both modes, so no dynamic colour.
 private fun materialScheme(k: KonstanzColors) = (if (k.isDark) darkColorScheme() else lightColorScheme()).copy(
     primary = k.primary,
-    onPrimary = White,
+    onPrimary = k.onPrimary,
     primaryContainer = k.primaryTint,
     onPrimaryContainer = k.onPrimaryTint,
     secondary = k.ink2,

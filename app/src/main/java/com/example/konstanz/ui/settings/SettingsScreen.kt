@@ -57,6 +57,7 @@ import com.example.konstanz.data.OfflineDataInfo
 import com.example.konstanz.data.display
 import com.example.konstanz.data.formatBytes
 import com.example.konstanz.data.RoutePreference
+import com.example.konstanz.data.SeasonalThemes
 import com.example.konstanz.data.SettingsRepository
 import com.example.konstanz.data.UserSettings
 import com.example.konstanz.ui.components.IconChip
@@ -86,8 +87,8 @@ import kotlinx.coroutines.launch
 data class SettingsActions(
     val onClose: () -> Unit,
     val onOpenOfflineData: () -> Unit = {},
-    val onOpenAbout: () -> Unit = {},
-    val onOpenLicenses: () -> Unit = {},
+    /** Null hides "Send feedback" (no support address yet). */
+    val onSendFeedback: (() -> Unit)? = null,
     val onOpenPrivacy: () -> Unit = {},
     /** Developer builds only: switch offline / error states on (Part J). */
     val onOpenSimulate: () -> Unit = {},
@@ -154,6 +155,16 @@ fun SettingsScreen(
                 }
             }
 
+            SettingsGroup(stringResource(R.string.seasonal_themes)) {
+                Column(Modifier.selectableGroup()) {
+                    SeasonalThemes.entries.forEach { option ->
+                        RadioRow(option.label, selected = settings.seasonalThemes == option) {
+                            update { setSeasonalThemes(option) }
+                        }
+                    }
+                }
+            }
+
             SettingsGroup(stringResource(R.string.offline_data)) {
                 val health = offlineData.shownHealth
                 SettingsRow(
@@ -182,9 +193,8 @@ fun SettingsScreen(
                     stringResource(R.string.version), icon = KtIcons.Info,
                     value = version + (offlineData?.timetableDate?.let { " · " + stringResource(R.string.timetable_x, it.display()) } ?: ""),
                 )
-                LinkRow(stringResource(R.string.about_sources), KtIcons.Database, null, actions.onOpenAbout)
-                LinkRow(stringResource(R.string.licenses), KtIcons.Document, null, actions.onOpenLicenses)
-                LinkRow(stringResource(R.string.privacy_policy), KtIcons.Shield, null, actions.onOpenPrivacy, last = true)
+                LinkRow(stringResource(R.string.privacy_policy), KtIcons.Shield, null, actions.onOpenPrivacy, last = actions.onSendFeedback == null)
+                actions.onSendFeedback?.let { LinkRow(stringResource(R.string.send_feedback), KtIcons.Info, null, it, last = true) }
             }
 
             if (showDeveloperOptions) {

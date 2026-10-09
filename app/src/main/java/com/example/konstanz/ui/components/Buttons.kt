@@ -1,6 +1,9 @@
 package com.example.konstanz.ui.components
 
 import androidx.compose.foundation.background
+import com.example.konstanz.ui.theme.OnBrand
+import com.example.konstanz.ui.theme.BrandPressed
+import com.example.konstanz.ui.theme.Brand
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -53,9 +56,10 @@ enum class ButtonVariant(
     val outlined: Boolean = false,
 ) {
     /** "Find routes" — one per screen. */
-    Primary({ Triple(com.example.konstanz.ui.theme.Primary, PrimaryPressed, White) }),
+    Primary({ Triple(Brand, BrandPressed, OnBrand) }),
     /** "Route from here" — secondary action next to a primary one. */
-    Tonal({ Triple(PrimaryTint, lerp(PrimaryTint, com.example.konstanz.ui.theme.Primary, 0.12f), OnPrimaryTint) }),
+    // Neutral, so it doesn't compete with the mint Primary button beside it.
+    Tonal({ Triple(Background, lerp(Background, com.example.konstanz.ui.theme.Primary, 0.12f), com.example.konstanz.ui.theme.Primary) }),
     /** "All departures" — neutral action on white surfaces. */
     Neutral({ Triple(Background, Line, Ink) }),
     /** "Add a place" — white with outline, on grey surfaces. */

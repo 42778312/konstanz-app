@@ -153,10 +153,11 @@ class DatabaseTransitRepository(
         limit: Int,
         line: String?,
         includeCancelled: Boolean,
+        dayOffset: Int,
     ): List<StopDeparture> {
         val station = net().bySlug[stopId] ?: return emptyList()
         val fetch = if (line == null) limit else limit * 8
-        val day = today()
+        val day = today().plusDays(dayOffset.toLong())
         // After-midnight trips belong to yesterday's service day with times ≥ 24:00.
         val rows = dao.departures(station.row.id, day.int(), from.value, fetch).map { it to 0 } +
             dao.departures(station.row.id, day.minusDays(1).int(), from.value + DAY, fetch).map { it to -DAY }

@@ -5,8 +5,6 @@
     <!-- Onboarding step 05: start routes from the current position. Never leaves the device. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!-- Offline mode (artboard 24): know when the phone has no internet. -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"

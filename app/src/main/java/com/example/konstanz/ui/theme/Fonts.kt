@@ -46,7 +46,7 @@ val BricolageGrotesque = FontFamily(
 @Composable
 private fun FontsPreview() {
     Column(Modifier.padding(16.dp)) {
-        Text("Konstanz Transit", fontFamily = BricolageGrotesque, fontWeight = FontWeight.ExtraBold, fontSize = 38.sp)
+        Text("Konstant", fontFamily = BricolageGrotesque, fontWeight = FontWeight.ExtraBold, fontSize = 38.sp)
         listOf(FontWeight.Normal, FontWeight.Medium, FontWeight.SemiBold, FontWeight.Bold, FontWeight.ExtraBold).forEach {
             Text("Figtree ${it.weight} · 14:32 – 14:48", fontFamily = Figtree, fontWeight = it, fontSize = 18.sp)
         }

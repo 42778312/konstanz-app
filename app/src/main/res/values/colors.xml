@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Mirrors ui/theme/Color.kt for XML-only places (system splash, launcher icon). -->
-    <color name="kt_primary">#FFD4003B</color>
+    <!-- Brand mint: launcher background, system splash, window background. -->
+    <color name="kt_primary">#FFCCF9D3</color>
+    <!-- Dark green on mint (launcher mark). -->
+    <color name="kt_on_brand">#FF0B3B22</color>
+    <!-- Deep mint: the mark on its white tile (BrandDeep). -->
+    <color name="kt_brand_deep">#FF17784A</color>
     <color name="kt_white">#FFFFFFFF</color>
 </resources>

@@ -30,12 +30,9 @@ import com.example.konstanz.ui.stops.DepartureDetailsRoute
 import com.example.konstanz.ui.stops.StopDetailsActions
 import com.example.konstanz.ui.stops.StopDetailsRoute
 import com.example.konstanz.data.SettingsRepository
-import com.example.konstanz.ui.about.AboutActions
-import com.example.konstanz.ui.about.AboutRoute
 import com.example.konstanz.ui.about.PrivacyScreen
 import com.example.konstanz.data.AppInfo
 import com.example.konstanz.data.SavedStore
-import com.example.konstanz.ui.about.LicensesScreen
 import com.example.konstanz.ui.designsystem.DesignSystemScreen
 import com.example.konstanz.ui.main.MainShell
 import com.example.konstanz.ui.onboarding.OnboardingScreen
@@ -48,8 +45,6 @@ object Routes {
     const val SPLASH = "splash"
     const val ONBOARDING = "onboarding"
     const val MAIN = "main"
-    const val ABOUT = "about"
-    const val LICENSES = "licenses"
     const val PRIVACY = "privacy"
     const val RECENT = "recent"
     const val SEARCH = "search?q={q}&pick={pick}"
@@ -95,6 +90,7 @@ fun KonstanzNavHost(navController: NavHostController = rememberNavController()) 
         composable(Routes.SPLASH) {
             SplashRoute(
                 isOnboardingCompleted = settings::isOnboardingCompleted,
+                seasonalThemes = settings::seasonalThemes,
                 onFinished = { onboardingDone ->
                     navController.navigate(if (onboardingDone) Routes.MAIN else Routes.ONBOARDING) {
                         // Splash is never shown again on Back.
@@ -114,8 +110,7 @@ fun KonstanzNavHost(navController: NavHostController = rememberNavController()) 
         composable(Routes.MAIN) { entry ->
             val command by entry.savedStateHandle.getStateFlow<String?>(MapCommand.KEY, null).collectAsState()
             MainShell(
-                onOpenAbout = { navController.navigate(Routes.ABOUT) },
-                onOpenLicenses = { navController.navigate(Routes.LICENSES) },
+                onSendFeedback = AppInfo.SUPPORT_EMAIL?.let { email -> { sendFeedback(context, email) } },
                 onOpenPrivacy = { navController.navigate(Routes.PRIVACY) },
                 onOpenStop = { navController.navigate(Routes.stop(it)) },
                 onOpenDeparture = { trip, stop, at -> navController.navigate(Routes.trip(trip, stop, at)) },
@@ -129,16 +124,6 @@ fun KonstanzNavHost(navController: NavHostController = rememberNavController()) 
                 mapCommand = MapCommand.decode(command),
                 onMapCommandHandled = { entry.savedStateHandle[MapCommand.KEY] = null },
                 onOpenDesignSystem = { navController.navigate(Routes.DESIGN_SYSTEM) },
-            )
-        }
-        composable(Routes.ABOUT) {
-            AboutRoute(
-                AboutActions(
-                    onBack = { navController.popBackStack() },
-                    onOpenLicenses = { navController.navigate(Routes.LICENSES) },
-                    onOpenPrivacyPolicy = { navController.navigate(Routes.PRIVACY) },
-                    onSendFeedback = AppInfo.SUPPORT_EMAIL?.let { email -> { sendFeedback(context, email) } },
-                )
             )
         }
         composable(Routes.PRIVACY) {
@@ -276,9 +261,6 @@ fun KonstanzNavHost(navController: NavHostController = rememberNavController()) 
         composable(Routes.SIMULATE) {
             SimulateStatesScreen(onBack = { navController.popBackStack() })
         }
-        composable(Routes.LICENSES) {
-            LicensesScreen(onBack = { navController.popBackStack() })
-        }
         composable(Routes.DESIGN_SYSTEM) {
             DesignSystemScreen()
         }
@@ -295,7 +277,7 @@ private fun NavHostController.backToMap(command: MapCommand) {
 private fun sendFeedback(context: android.content.Context, email: String) {
     val intent = android.content.Intent(android.content.Intent.ACTION_SENDTO, "mailto:".toUri())
         .putExtra(android.content.Intent.EXTRA_EMAIL, arrayOf(email))
-        .putExtra(android.content.Intent.EXTRA_SUBJECT, "Konstanz Transit ${AppInfo.versionName(context)}")
+        .putExtra(android.content.Intent.EXTRA_SUBJECT, "Konstant ${AppInfo.versionName(context)}")
     runCatching { context.startActivity(intent) }
         .onFailure { android.widget.Toast.makeText(context, "No e-mail app found. Write to $email", android.widget.Toast.LENGTH_LONG).show() }
 }

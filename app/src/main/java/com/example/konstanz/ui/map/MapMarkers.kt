@@ -1,6 +1,7 @@
 package com.example.konstanz.ui.map
 
 import androidx.compose.animation.core.LinearEasing
+import com.example.konstanz.ui.theme.OnPrimary
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
@@ -70,7 +71,7 @@ fun StopTileMarker(modifier: Modifier = Modifier) {
             .border(2.dp, White, shape),
         contentAlignment = Alignment.Center,
     ) {
-        KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 15.dp, tint = White, strokeWidth = 2.4f)
+        KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 15.dp, tint = OnPrimary, strokeWidth = 2.4f)
     }
 }
 
@@ -201,16 +202,15 @@ fun WaterLabel(text: String, modifier: Modifier = Modifier) {
 fun ClusterMarker(count: Int, modifier: Modifier = Modifier) {
     Box(
         modifier
-            .size(36.dp)
+            .size(30.dp)
             .dropShadow(CircleShape, Shadow(radius = 6.dp, offset = DpOffset(0.dp, 2.dp), color = ShadowInk, alpha = 0.25f))
-            .dropShadow(CircleShape, Shadow(radius = 0.dp, spread = 5.dp, color = Primary, alpha = 0.18f))
-            .background(Primary, CircleShape)
-            .border(3.dp, White, CircleShape),
+            .background(Surface, CircleShape)
+            .border(2.5.dp, Primary, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             "$count",
-            style = TextStyle(fontFamily = Figtree, fontWeight = FontWeight.ExtraBold, fontSize = 14.sp, color = White),
+            style = TextStyle(fontFamily = Figtree, fontWeight = FontWeight.ExtraBold, fontSize = 13.sp, color = Primary),
         )
     }
 }
@@ -291,7 +291,7 @@ fun SelectedStopMarker(modifier: Modifier = Modifier) {
                 .border(3.dp, White, shape),
             contentAlignment = Alignment.Center,
         ) {
-            KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 22.dp, tint = White, strokeWidth = 2.4f)
+            KonstanzIcon(KtIcons.Bus, contentDescription = null, size = 22.dp, tint = OnPrimary, strokeWidth = 2.4f)
         }
         Canvas(Modifier.size(width = 14.dp, height = 8.dp)) {
             val tri = Path().apply {
