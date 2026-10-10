@@ -5,6 +5,8 @@
     <!-- Onboarding step 05: start routes from the current position. Never leaves the device. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Added by MapLibre; the map is fully offline (bundled tiles, fonts, styles) and the privacy policy promises no internet. -->
+    <uses-permission android:name="android.permission.INTERNET" tools:node="remove" />
 
     <application
         android:allowBackup="true"
