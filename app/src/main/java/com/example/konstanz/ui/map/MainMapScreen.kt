@@ -15,6 +15,7 @@ import com.example.konstanz.data.transit.Place
 import com.example.konstanz.ui.search.SearchSession
 import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import com.example.konstanz.data.transit.RealtimeInfo
 import com.example.konstanz.data.transit.StopDeparture
 import com.example.konstanz.ui.stops.StopSheet
@@ -201,6 +202,11 @@ fun MainMapRoute(actions: MainMapActions, command: MapCommand? = null, onCommand
     val settings by settingsRepository.settings.collectAsState(initial = com.example.konstanz.data.UserSettings())
     val scope = rememberCoroutineScope()
     val sheetOpen = selection != null || selectedStopId != null || selectedPlaceId != null || shownTripKey != null
+    // Leaves in autumn, snow in winter, whenever the map is open; null until the setting is read.
+    val seasonalThemes by remember { settingsRepository.settings.map { it.seasonalThemes } }.collectAsState(initial = null)
+    val season = if (seasonalThemes == com.example.konstanz.data.SeasonalThemes.EventsAndSeasons) {
+        remember { com.example.konstanz.data.SeasonalCalendar.seasonOf(java.time.LocalDate.now()) }
+    } else null
     LaunchedEffect(sheetOpen) { actions.onSelectionModeChange(sheetOpen) }
     BackHandler(enabled = sheetOpen) { closeAll() }
 
@@ -234,6 +240,7 @@ fun MainMapRoute(actions: MainMapActions, command: MapCommand? = null, onCommand
         onShowBusStopsChange = { v -> scope.launch { settingsRepository.setShowBusStops(v) } },
         shownTrip = shownTrip,
         onCloseTrip = { shownTripKey = null },
+        season = season,
     )
 }
 
@@ -333,6 +340,8 @@ fun MainMapScreen(
     /** A bus trip drawn on the map with its own sheet ("Show on map"). */
     shownTrip: Journey? = null,
     onCloseTrip: () -> Unit = {},
+    /** Autumn or Winter falls over the map (see MapSeasonEffect); other seasons show nothing. */
+    season: com.example.konstanz.data.SeasonalEvent? = null,
 ) {
     val camera = rememberMapCameraState()
     var layersOpen by rememberSaveable { mutableStateOf(false) }
@@ -452,6 +461,9 @@ fun MainMapScreen(
                 SelectedStopMarker(Modifier.at(selectedStop.point.x, selectedStop.point.y, anchorBottom = true))
             }
         }
+
+        // Over the map, under the controls; touches go through to the map.
+        if (season != null) com.example.konstanz.ui.splash.MapSeasonEffect(season, Modifier.fillMaxSize())
 
         // Top: search field + menu, then the offline pill and layers.
         Column(

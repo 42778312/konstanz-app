@@ -35,7 +35,7 @@ Konstant ist der ruhige Weg durch Konstanz. Fahrplan, Karte und Routenplaner sin
 • Zuhause, Arbeit und Lieblingsorte mit einem Tipp
 • Dein Standort bleibt auf deinem Gerät: kein Konto, keine Werbung, kein Tracking
 • Hell- und Dunkelmodus (echtes Schwarz für OLED), Deutsch und Englisch
-• Der Startbildschirm feiert mit: Fasnacht, Seenachtfest, Weihnachten und jede Jahreszeit
+• Im Herbst fallen Blätter über die Karte, im Winter schneit es
 
 Fahrplandaten: NVBW GmbH (Datenlizenz Deutschland 2.0). Karte: © OpenStreetMap-Mitwirkende. Angezeigt werden Fahrplanzeiten, keine Echtzeitdaten.
 
@@ -65,7 +65,7 @@ Konstant is the steady way to move through Konstanz. The timetable, the map and 
 • Home, Work and favourite places in one tap
 • Your location stays on your device: no account, no ads, no tracking
 • Light and dark mode (true black for OLED), German and English
-• The start screen celebrates Fasnacht, Seenachtfest, Christmas and every season
+• Leaves fall across the map in autumn, snow in winter
 
 Timetable data: NVBW GmbH (Datenlizenz Deutschland 2.0). Map: © OpenStreetMap contributors. Times are scheduled times, not live data.
 

@@ -59,15 +59,7 @@ private const val STILL_TIME = 2.5f
  */
 @Composable
 internal fun SeasonalEffect(event: SeasonalEvent, modifier: Modifier = Modifier, candles: Int = 1) {
-    val context = LocalContext.current
-    val still = remember {
-        Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
-    }
-    val time by produceState(STILL_TIME) {
-        if (still) return@produceState
-        val start = withFrameNanos { it }
-        while (true) withFrameNanos { value = STILL_TIME + (it - start) / 1e9f }
-    }
+    val time by rememberEffectTime()
     val particles = remember(event) { Particle.many(event.ordinal) }
     Canvas(modifier) {
         when (event) {
@@ -87,6 +79,38 @@ internal fun SeasonalEffect(event: SeasonalEvent, modifier: Modifier = Modifier,
             SeasonalEvent.Summer -> { sun(time); particles.take(18).forEach { sparkle(it, time) } }
             SeasonalEvent.Autumn -> particles.take(16).forEach { leaf(it, time) }
         }
+    }
+}
+
+/**
+ * The season falling over the map, all the time it is open: leaves in autumn, snow in winter,
+ * nothing in spring and summer. Lighter than [SeasonalEffect] so the map stays readable.
+ */
+@Composable
+internal fun MapSeasonEffect(season: SeasonalEvent, modifier: Modifier = Modifier) {
+    if (season != SeasonalEvent.Autumn && season != SeasonalEvent.Winter) return
+    val time by rememberEffectTime()
+    val particles = remember(season) { Particle.many(season.ordinal) }
+    // Time is read while drawing, so each frame only redraws, it doesn't recompose.
+    Canvas(modifier) {
+        when (season) {
+            SeasonalEvent.Autumn -> particles.take(12).forEach { leaf(it, time) }
+            else -> particles.take(36).forEach { mapSnow(it, time) }
+        }
+    }
+}
+
+/** Seconds since the effect started; one still frame ([STILL_TIME]) when animations are off. */
+@Composable
+private fun rememberEffectTime(): androidx.compose.runtime.State<Float> {
+    val context = LocalContext.current
+    val still = remember {
+        Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
+    }
+    return produceState(STILL_TIME) {
+        if (still) return@produceState
+        val start = withFrameNanos { it }
+        while (true) withFrameNanos { value = STILL_TIME + (it - start) / 1e9f }
     }
 }
 
@@ -112,6 +136,14 @@ private class Particle(val x: Float, val y: Float, val speed: Float, val size: F
 private fun DrawScope.snow(p: Particle, t: Float, alpha: Float) {
     val r = (1.5f + p.size * 3f) * density
     drawCircle(White.copy(alpha = alpha * (0.5f + p.size * 0.5f)), r, p.drift(this, t, 0.08f, 0.02f))
+}
+
+/** Snow for the light map: white flakes with a faint grey rim, or they would vanish on it. */
+private fun DrawScope.mapSnow(p: Particle, t: Float) {
+    val r = (2f + p.size * 2.5f) * density
+    val at = p.drift(this, t, 0.06f, 0.02f)
+    drawCircle(Color(0x33405060), r + 0.8f * density, at)
+    drawCircle(White.copy(alpha = 0.95f), r, at)
 }
 
 private val CONFETTI = listOf(Color(0xFFFFD23F), Color(0xFF3BCEAC), Color(0xFFEE4266), Color(0xFF4CC9F0), Color.White)

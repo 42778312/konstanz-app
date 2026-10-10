@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 
 /**
- * Holidays, Konstanz events and the four seasons the start screen dresses up for
+ * Holidays, Konstanz events and the four seasons
  * (see ui/splash/SeasonalEffect.kt). [title] names it in the countdown ("Christmas · in 3 days").
  */
 enum class SeasonalEvent(@param:StringRes val greeting: Int, @param:StringRes val title: Int, val isSeason: Boolean = false) {
@@ -30,7 +30,7 @@ enum class SeasonalEvent(@param:StringRes val greeting: Int, @param:StringRes va
     Autumn(R.string.season_autumn, R.string.season_autumn, isSeason = true),
 }
 
-/** What the start screen shows on a day: [event] itself ([daysToGo] = 0) or its countdown (1–7). */
+/** What a day belongs to: [event] itself ([daysToGo] = 0) or its countdown (1–7). */
 data class SeasonalMoment(val event: SeasonalEvent, val daysToGo: Int = 0)
 
 /** Works out on the phone (no internet) which event or season a day belongs to. */

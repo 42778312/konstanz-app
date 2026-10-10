@@ -10,14 +10,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.example.konstanz.data.SeasonalCalendar
 import com.example.konstanz.data.SeasonalEvent
 import com.example.konstanz.data.SeasonalMoment
-import com.example.konstanz.data.SeasonalThemes
 import java.time.LocalDate
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -76,25 +73,15 @@ import kotlinx.coroutines.async
 fun SplashRoute(
     isOnboardingCompleted: suspend () -> Boolean,
     onFinished: (onboardingDone: Boolean) -> Unit,
-    seasonalThemes: suspend () -> SeasonalThemes = { SeasonalThemes.Off },
 ) {
     val finish by rememberUpdatedState(onFinished)
     val progress = remember { Animatable(0f) }
-    var moment by remember { mutableStateOf<SeasonalMoment?>(null) }
     LaunchedEffect(Unit) {
         val done = async { isOnboardingCompleted() }
-        // A quick DataStore read; the splash starts in brand red and fades to the event's look.
-        moment = when (seasonalThemes()) {
-            SeasonalThemes.EventsAndSeasons -> SeasonalCalendar.momentOn(LocalDate.now(), includeSeasons = true)
-            SeasonalThemes.EventsOnly -> SeasonalCalendar.momentOn(LocalDate.now(), includeSeasons = false)
-            SeasonalThemes.Off -> null
-        }
-        // Events (and their countdown week) stay a little longer so the effect can be seen; seasons don't.
-        val duration = if (moment?.event?.isSeason == false) 1800 else 1200
-        progress.animateTo(1f, tween(durationMillis = duration, easing = FastOutSlowInEasing))
+        progress.animateTo(1f, tween(durationMillis = 1200, easing = FastOutSlowInEasing))
         finish(done.await())
     }
-    SplashScreen(progress = progress.value, moment = moment)
+    SplashScreen(progress = progress.value)
 }
 
 @Composable

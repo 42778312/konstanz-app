@@ -90,7 +90,6 @@ fun KonstanzNavHost(navController: NavHostController = rememberNavController()) 
         composable(Routes.SPLASH) {
             SplashRoute(
                 isOnboardingCompleted = settings::isOnboardingCompleted,
-                seasonalThemes = settings::seasonalThemes,
                 onFinished = { onboardingDone ->
                     navController.navigate(if (onboardingDone) Routes.MAIN else Routes.ONBOARDING) {
                         // Splash is never shown again on Back.

@@ -27,7 +27,7 @@ enum class RoutePreference(@param:androidx.annotation.StringRes private val text
     override val label: String get() = Texts.get(text)
 }
 
-/** What the start screen dresses up for (see [SeasonalCalendar]). */
+/** Seasonal effects: in autumn and winter the map shows falling leaves or snow (see [SeasonalCalendar]). */
 enum class SeasonalThemes(@param:androidx.annotation.StringRes private val text: Int) : SettingOption {
     EventsAndSeasons(R.string.themes_events_seasons), EventsOnly(R.string.themes_events_only), Off(R.string.themes_off);
 
