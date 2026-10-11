@@ -281,7 +281,13 @@ in Konstanz</string>
     <string name="pp_location_body">Wenn du es erlaubst, nutzt die App deinen Standort, um dich auf der Karte zu zeigen, Haltestellen in deiner Nähe zu finden und Routen ab deiner Position zu planen. Dein Standort wird nur auf dem Handy verwendet und nie gespeichert oder geteilt. Du kannst ihn jederzeit unter Einstellungen → Standort ausschalten; alles andere funktioniert weiter.</string>
     <string name="pp_saved_body">Deine gespeicherten Orte, gespeicherten Haltestellen, letzten Suchen und deine Routeneinstellung. Sie bleiben auf deinem Handy und werden beim Deinstallieren der App gelöscht. Wenn du die Android-Sicherung nutzt, können sie in deiner eigenen Sicherung enthalten sein; Fahrplan- und Kartendaten nicht.</string>
     <string name="pp_internet_body">Die App verbindet sich nie mit dem Internet: Fahrplan, Karte und Orte sind in die App eingebaut und kommen mit App-Updates.</string>
-    <string name="pp_sources_body">Fahrplan: NVBW GmbH (Datenlizenz Deutschland 2.0). Karte, Orte und Straßen: © OpenStreetMap-Mitwirkende (ODbL). Haltestellen: Stadt Konstanz. Die Nutzung dieser Daten betrifft keine deiner persönlichen Daten.</string>
+    <string name="pp_sources_body">Die Nutzung dieser Daten betrifft keine deiner persönlichen Daten. Die Links öffnen sich in deinem Browser.</string>
+    <string name="source_timetable">Fahrplan: NVBW GmbH, Nahverkehrsgesellschaft Baden-Württemberg (Datenlizenz Deutschland 2.0)</string>
+    <string name="source_stops">Haltestellen: Stadt Konstanz, Offene Daten Konstanz</string>
+    <string name="source_map">Karte, Orte und Straßen: © OpenStreetMap-Mitwirkende (ODbL)</string>
+    <string name="source_official_bus">Offizielle Businfos und Echtzeit: Stadtwerke Konstanz</string>
+    <string name="pp_disclaimer">Keine offizielle App</string>
+    <string name="pp_disclaimer_body">Konstant ist eine unabhängige App. Sie vertritt keine Behörde und wird nicht von der Stadt Konstanz, den Stadtwerken Konstanz, der NVBW oder dem Land Baden-Württemberg herausgegeben, unterstützt oder empfohlen. Sie zeigt Fahrplanzeiten aus dem veröffentlichten Fahrplan, keine Echtzeitdaten; offizielle Informationen findest du in den Quellen unten.</string>
     <string name="pp_contact_body">Fragen zum Datenschutz: %1$s</string>
     <string name="valid_until">gültig bis %1$s</string>
     <string name="updates_note">Neue Fahrpläne und Karten kommen mit App-Updates. Halte die App aktuell, um immer den gültigen Fahrplan zu haben.</string>

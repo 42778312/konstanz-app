@@ -28,6 +28,8 @@ Bus, Fußwege und Karte für Konstanz. Funktioniert auch ohne Internet.
 ```
 Konstant ist der ruhige Weg durch Konstanz. Fahrplan, Karte und Routenplaner sind auf deinem Handy gespeichert. Die App öffnet sofort und funktioniert auch im Funkloch.
 
+Hinweis: Konstant ist eine unabhängige App und keine offizielle App. Sie vertritt keine Behörde und wird nicht von der Stadt Konstanz, den Stadtwerken Konstanz, der NVBW oder dem Land Baden-Württemberg herausgegeben oder unterstützt.
+
 • Abfahrten an jeder Haltestelle, für jeden Tag der Woche und jede Uhrzeit
 • Die beste Route in unter einer Sekunde: schnellste, wenig Fußweg oder wenig Umstiege
 • Schritt-für-Schritt-Fußwege zur Haltestelle und bis vor die Tür
@@ -37,7 +39,11 @@ Konstant ist der ruhige Weg durch Konstanz. Fahrplan, Karte und Routenplaner sin
 • Hell- und Dunkelmodus (echtes Schwarz für OLED), Deutsch und Englisch
 • Im Herbst fallen Blätter über die Karte, im Winter schneit es
 
-Fahrplandaten: NVBW GmbH (Datenlizenz Deutschland 2.0). Karte: © OpenStreetMap-Mitwirkende. Angezeigt werden Fahrplanzeiten, keine Echtzeitdaten.
+Angezeigt werden Fahrplanzeiten aus dem veröffentlichten Fahrplan, keine Echtzeitdaten. Offizielle Quellen:
+• Fahrplan: NVBW GmbH, Nahverkehrsgesellschaft Baden-Württemberg (Datenlizenz Deutschland 2.0): https://www.nvbw.de/open-data/fahrplandaten/fahrplandaten-mit-liniennetz
+• Haltestellen: Stadt Konstanz, Offene Daten Konstanz: https://offenedaten-konstanz.de
+• Karte: © OpenStreetMap-Mitwirkende (ODbL): https://www.openstreetmap.org/copyright
+• Offizielle Businfos und Echtzeit: Stadtwerke Konstanz: https://www.stadtwerke-konstanz.de/mobilitaet/bus
 
 Konstant unterwegs in Konstanz.
 ```
@@ -58,6 +64,8 @@ Buses, walking routes and maps for Konstanz. Works without internet.
 ```
 Konstant is the steady way to move through Konstanz. The timetable, the map and the route planner live on your phone, so the app opens instantly and keeps working without signal.
 
+Note: Konstant is an independent app, not an official one. It does not represent any government body and is not made by, affiliated with or endorsed by the City of Konstanz, Stadtwerke Konstanz, NVBW or the state of Baden-Württemberg.
+
 • Departures at every stop, for any day of the week and any time
 • The best route in under a second: fastest, least walking or fewest transfers
 • Turn-by-turn walking directions to the stop and to your door
@@ -67,7 +75,11 @@ Konstant is the steady way to move through Konstanz. The timetable, the map and 
 • Light and dark mode (true black for OLED), German and English
 • Leaves fall across the map in autumn, snow in winter
 
-Timetable data: NVBW GmbH (Datenlizenz Deutschland 2.0). Map: © OpenStreetMap contributors. Times are scheduled times, not live data.
+Times are scheduled times from the published timetable, not live data. Official sources:
+• Timetable: NVBW GmbH, Nahverkehrsgesellschaft Baden-Württemberg (Datenlizenz Deutschland 2.0): https://www.nvbw.de/open-data/fahrplandaten/fahrplandaten-mit-liniennetz
+• Bus stops: City of Konstanz, Offene Daten Konstanz: https://offenedaten-konstanz.de
+• Map: © OpenStreetMap contributors (ODbL): https://www.openstreetmap.org/copyright
+• Official bus information and live times: Stadtwerke Konstanz: https://www.stadtwerke-konstanz.de/mobilitaet/bus
 
 The steady way to move through Konstanz.
 ```

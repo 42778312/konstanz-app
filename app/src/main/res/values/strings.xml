@@ -282,7 +282,13 @@ through Konstanz</string>
     <string name="pp_location_body">If you allow it, the app uses your location to show where you are on the map, to find stops near you and to plan routes from your position. Your location is used only on the phone and is never stored or shared. You can turn it off at any time in Settings → Location; everything else keeps working.</string>
     <string name="pp_saved_body">Your saved places, saved stops and recent searches, and your route preference. They stay on your phone and are deleted when you uninstall the app. If you use Android\'s backup, they can be included in your own backup; timetable and map data are not.</string>
     <string name="pp_internet_body">The app never connects to the internet: timetable, map and places are built into the app and arrive with app updates.</string>
-    <string name="pp_sources_body">Timetable: NVBW GmbH (Datenlizenz Deutschland 2.0). Map, places and streets: © OpenStreetMap contributors (ODbL). Bus stops: Stadt Konstanz. Using this data does not involve any of your personal data.</string>
+    <string name="pp_sources_body">Using this data does not involve any of your personal data. The links open in your browser.</string>
+    <string name="source_timetable">Timetable: NVBW GmbH, Nahverkehrsgesellschaft Baden-Württemberg (Datenlizenz Deutschland 2.0)</string>
+    <string name="source_stops">Bus stops: Stadt Konstanz, Offene Daten Konstanz</string>
+    <string name="source_map">Map, places and streets: © OpenStreetMap contributors (ODbL)</string>
+    <string name="source_official_bus">Official bus information and live times: Stadtwerke Konstanz</string>
+    <string name="pp_disclaimer">Not an official app</string>
+    <string name="pp_disclaimer_body">Konstant is an independent app. It does not represent any government body and is not made by, affiliated with or endorsed by the City of Konstanz, Stadtwerke Konstanz, NVBW or the state of Baden-Württemberg. It shows scheduled times from the published timetable, not live data; for official information use the sources below.</string>
     <string name="pp_contact_body">Questions about privacy: %1$s</string>
     <string name="valid_until">valid until %1$s</string>
     <string name="updates_note">New timetables and maps come with app updates. Keep the app updated to always have the current timetable.</string>
